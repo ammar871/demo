@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:demo/constans.dart';
 import 'package:demo/database/database_helber.dart';
 import 'package:demo/database/model/CartModel.dart';
+import 'package:demo/database/model/FavoraiteModel.dart';
 import 'package:demo/editor/shard_prefrance.dart';
 import 'package:demo/network/catogries.dart';
 
@@ -1224,17 +1225,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                                       width: 2,
                                                     ),
 
-                                                    // CartModel(
-                                                    //     this._orderId,
-                                                    //     this._qty,
-                                                    //     this._price,
-                                                    //     this._priceWithCurrency,
-                                                    //     this._total,
-                                                    //     this._productId,
-                                                    //     this._imageProduct,
-                                                    //     this._nameProduct,
-                                                    //     this._sizeProduct,
-                                                    //     this._comment);
+
                                                     InkWell(
                                                       onTap: () {
                                                         CartModel cartmodel = new CartModel(
@@ -1342,4 +1333,5 @@ class _ProductsScreenState extends State<ProductsScreen> {
       ));
     }
   }
+
 }

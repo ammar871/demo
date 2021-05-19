@@ -24,23 +24,14 @@ class _WishListScreenState extends State<WishListScreen> {
   bool loadingData = true;
 
   bool loginName = false;
-  Future<bool> getLogin() async {
-    setState(() async {
-      loginName = await shardPreferencesEditor.getIsLogin();
-      print(loginName);
-      if (loginName == null) {
-     loadingData = false;
-      }
-        loadingData = false;
-    });
 
-  
-    return loginName;
+  getLogin() async {
+    loginName = await shardPreferencesEditor.getIsLogin();
+    print(loginName);
   }
 
-  
-
   Cemmon cemmon = Cemmon();
+
   initData() async {
     if (dataprovider == null) {
       dataprovider = Provider.of(context);
@@ -52,14 +43,15 @@ class _WishListScreenState extends State<WishListScreen> {
   @override
   void initState() {
     super.initState();
-    // cemmon.getLogin();
+
     // print(cemmon.loginName);
   }
 
   @override
   Widget build(BuildContext context) {
-    initData();
     getLogin();
+    initData();
+
     return Scaffold(
         appBar: AppBar(
           elevation: 0,
@@ -80,38 +72,90 @@ class _WishListScreenState extends State<WishListScreen> {
                 fontWeight: FontWeight.bold, fontSize: 15, color: KColorecart),
           ),
         ),
-        body: loginName
-            ? isLoginMethoed()
-            : Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-               
-                height: double.infinity,
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Please Login",
-                              style:
-                                  TextStyle(fontSize: 20, color: KColorecart),
-                            ),
-                            SizedBox(
-                              height: 30,
-                            ),
-                            InkWell(
-                              onTap: () {
-                                Navigator.pushNamed(context, LoginScreen.id);
-                              },
-                              child: Container(
-                                height: 40,
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: KColoreblue),
-                                  borderRadius: BorderRadius.circular(4.0),
-                                  color: KColorecart,
+        body: FutureBuilder(
+          future: shardPreferencesEditor.getIsLogin(),
+          builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+            if (snapshot.hasData) {
+              return Container(
+                child: snapshot.data == true
+                    ? isLoginMethoed()
+                    : Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          height: double.infinity,
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "Please Login",
+                                  style: TextStyle(
+                                      fontSize: 20, color: KColorecart),
                                 ),
-                                child: Center(
-                                    child: Padding(
+                                SizedBox(
+                                  height: 30,
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    Navigator.pushNamed(
+                                        context, LoginScreen.id);
+                                  },
+                                  child: Container(
+                                    height: 40,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color: KColoreblue),
+                                      borderRadius: BorderRadius.circular(4.0),
+                                      color: KColorecart,
+                                    ),
+                                    child: Center(
+                                        child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text("Go To Login",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 15,
+                                            color: Colors.white,
+                                          )),
+                                    )),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+              );
+            } else {
+              return  Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  height: double.infinity,
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Please Login",
+                          style: TextStyle(
+                              fontSize: 20, color: KColorecart),
+                        ),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        InkWell(
+                          onTap: () {
+                            Navigator.pushNamed(
+                                context, LoginScreen.id);
+                          },
+                          child: Container(
+                            height: 40,
+                            decoration: BoxDecoration(
+                              border: Border.all(color: KColoreblue),
+                              borderRadius: BorderRadius.circular(4.0),
+                              color: KColorecart,
+                            ),
+                            child: Center(
+                                child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Text("Go To Login",
                                       style: TextStyle(
@@ -120,13 +164,17 @@ class _WishListScreenState extends State<WishListScreen> {
                                         color: Colors.white,
                                       )),
                                 )),
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
-            ));
+              );
+            }
+
+          },
+        ));
   }
 
   isLoginMethoed() {

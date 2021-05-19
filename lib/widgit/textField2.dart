@@ -7,6 +7,7 @@ class CustomTextFyled2 extends StatelessWidget {
   final String hint;
   final Function onClick;
   BuildContext context;
+ final TextEditingController controller;
   // ignore: missing_return
   String _errorMassege(String str) {
     switch (str) {
@@ -23,7 +24,7 @@ class CustomTextFyled2 extends StatelessWidget {
     }
   }
 
-  CustomTextFyled2({@required this.hint,@required this.onClick});
+  CustomTextFyled2({@required this.hint,@required this.onClick,@required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +32,7 @@ class CustomTextFyled2 extends StatelessWidget {
       height: 35,
       child: Center(
         child: TextFormField(
+          controller: controller,
           // ignore: missing_return
           validator: (value) {
 

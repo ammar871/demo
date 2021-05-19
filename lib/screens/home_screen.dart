@@ -66,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
     ProductsScreen(),
     LocationScreen(),
     MyOrdersScreen(),
-    CartScreen()
+    ProfileScreen()
   ];
   String lang;
   bool loadIsLogin;
@@ -83,9 +83,16 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  int selectServic;
+
+  getSelectServic() async {
+    selectServic = await shardPreferencesEditor.getSelectService();
+  }
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIOverlays([]);
+    getSelectServic();
     return Scaffold(
       appBar: appBarWedgit(),
       body: _tabs[_currentIndex],
@@ -116,6 +123,13 @@ class _HomeScreenState extends State<HomeScreen> {
               // ignore: deprecated_member_use
               title: Text("My Orders"),
               backgroundColor: KColoreblue),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.person_pin)
+              // ignore: deprecated_member_use
+              ,
+              // ignore: deprecated_member_use
+              title: Text("My Profile"),
+              backgroundColor: KColoreblue)
         ],
         onTap: (index) {
           setState(() {
@@ -139,7 +153,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       InkWell(
                         onTap: () {
 
-                          Navigator.pushNamed(context, ProfileScreen.id);
                         },
                         child: Image.asset(
                           "images/arbic.png",
@@ -203,54 +216,80 @@ class _HomeScreenState extends State<HomeScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Expanded(
-                      child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(color: KColoreblue),
-                            borderRadius: BorderRadius.circular(5.0),
-                          ),
-                          child: Center(
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 1, bottom: 1, left: 18, right: 18),
-                              child: Center(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(5.0),
-                                  child: Text(
-                                    "Delivery",
-                                    style: TextStyle(
-                                        color: KColoreblue,
-                                        fontWeight: FontWeight.w400),
-                                  ),
+                      child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        selectServic==1;
+                        shardPreferencesEditor.setSelectService(1);
+                      });
+                    },
+                    child: Container(
+                        decoration: BoxDecoration(
+                          color: (selectServic == null || selectServic == 1)
+                              ? KColorecart
+                              : null,
+                          border: Border.all(color: KColoreblue),
+                          borderRadius: BorderRadius.circular(5.0),
+                        ),
+                        child: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                top: 1, bottom: 1, left: 18, right: 18),
+                            child: Center(
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(
+                                  "Delivery",
+                                  style: TextStyle(
+                                      color: (selectServic == null || selectServic == 1)
+                                          ? Colors.white
+                                          : null,
+                                      fontWeight: FontWeight.w400),
                                 ),
                               ),
                             ),
-                          ))),
+                          ),
+                        )),
+                  )),
                   SizedBox(
                     width: 3,
                   ),
                   Expanded(
-                      child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(color: KColoreblue),
-                            borderRadius: BorderRadius.circular(5.0),
-                          ),
-                          child: Center(
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 1, bottom: 1, left: 18, right: 18),
-                              child: Center(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(5.0),
-                                  child: Text(
-                                    "Pick up",
-                                    style: TextStyle(
-                                        color: KColoreblue,
-                                        fontWeight: FontWeight.w400),
+                      child: InkWell(
+                        onTap: (){
+                          setState(() {
+                            selectServic==2;
+                            shardPreferencesEditor.setSelectService(2);
+                          });
+                        },
+                        child: Container(
+                            decoration: BoxDecoration(
+                              color: selectServic == 2
+                                  ? KColorecart
+                                  : null,
+                              border: Border.all(color: KColoreblue),
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                            child: Center(
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 1, bottom: 1, left: 18, right: 18),
+                                child: Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(5.0),
+                                    child: Text(
+                                      "Pick up",
+                                      style: TextStyle(
+                                          color:  selectServic == 2
+                                              ? Colors.white
+                                              : null,
+                                          fontWeight: FontWeight.w400),
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          )))
+                            )),
+                      ))
                 ],
               ),
               SizedBox(
@@ -269,6 +308,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   lang: lange,
                 ),
               ),
+
               InkWell(
                 onTap: () {
                   Navigator.pop(context);
@@ -285,6 +325,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
                 child: _itemMenue(name: "Login", lang: lange),
               ),
+
+
               InkWell(
                   onTap: () {
                     setState(() {
@@ -429,7 +471,7 @@ class _HomeScreenState extends State<HomeScreen> {
               fontWeight: FontWeight.bold, fontSize: 15, color: KColorecart),
         ),
       );
-    } else {
+    } else if(_currentIndex == 2){
       return AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
@@ -443,6 +485,24 @@ class _HomeScreenState extends State<HomeScreen> {
         centerTitle: true,
         title: Text(
           "My Orders",
+          style: TextStyle(
+              fontWeight: FontWeight.bold, fontSize: 15, color: KColorecart),
+        ),
+      );
+    }else{
+      return AppBar(
+        elevation: 0,
+        backgroundColor: Colors.white,
+        leading: InkWell(
+          onTap: () {},
+          child: Icon(
+            Icons.keyboard_arrow_left_outlined,
+            color: KColorecart,
+          ),
+        ),
+        centerTitle: true,
+        title: Text(
+          "My Profile",
           style: TextStyle(
               fontWeight: FontWeight.bold, fontSize: 15, color: KColorecart),
         ),

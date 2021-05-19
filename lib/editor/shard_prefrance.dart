@@ -9,6 +9,8 @@ class ShardPreferencesEditor{
   final String USER_ID = "uesr_id";
    final String USER_IS_LOGIN = "uesr_login";
 
+  final String USER_SELECT_SERVICE = "uesr_service";
+
 //set data into shared preferences like this
   Future<void> setAuthToken(String authToken) async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -65,6 +67,20 @@ class ShardPreferencesEditor{
     final SharedPreferences pref = await SharedPreferences.getInstance();
     bool logined = false;
     logined = pref.getBool(this.USER_IS_LOGIN) ?? null;
+    return logined;
+  }
+
+  //set data into shared preferences like this
+  Future<int> setSelectService(int islogin) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setInt(this.USER_SELECT_SERVICE, islogin);
+  }
+
+//get value from shared preferences
+  Future<int> getSelectService() async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    int logined = 0;
+    logined = pref.getInt(this.USER_SELECT_SERVICE) ?? null;
     return logined;
   }
 }

@@ -1,6 +1,7 @@
 import 'package:demo/providers/data_providers.dart';
 import 'package:demo/providers/home_provider.dart';
 import 'package:demo/providers/locations_providers.dart';
+import 'package:demo/providers/profile_provider.dart';
 import 'package:demo/providers/wishlist.dart';
 import 'package:demo/screens/add_new_address.dart';
 import 'package:demo/screens/cart_screen.dart';
@@ -54,7 +55,9 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider<WishListProviders>(
             create: (_) => WishListProviders()),
         ChangeNotifierProvider<LocationsProviders>(
-            create: (_) => LocationsProviders())
+            create: (_) => LocationsProviders()),
+        ChangeNotifierProvider<ProfileProviders>(
+            create: (_) => ProfileProviders())
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
