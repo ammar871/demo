@@ -32,12 +32,18 @@ class CartModel {
       this._sizeProduct,
       this._comment);
 
-  CartModel.name(
+  CartModel.withId(
     this._id,
-    this._orderId,
-    this._qty,
-    this._price,
-    this._total,
+      this._orderId,
+      this._qty,
+      this._price,
+      this._priceWithCurrency,
+      this._total,
+      this._productId,
+      this._imageProduct,
+      this._nameProduct,
+      this._sizeProduct,
+      this._comment
   );
 
   String get priceWithCurrency => _priceWithCurrency;

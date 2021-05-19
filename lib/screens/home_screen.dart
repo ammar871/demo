@@ -399,7 +399,7 @@ class _HomeScreenState extends State<HomeScreen> {
             InkWell(
               onTap: () {
                 setState(() {
-                  Navigator.pushReplacementNamed(context, CartScreen.id);
+                  Navigator.pushNamed(context, CartScreen.id);
                 });
               },
               child: Icon(

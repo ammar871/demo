@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:demo/database/database_helber.dart';
 import 'package:demo/database/model/CartModel.dart';
 import 'package:demo/network/response_products.dart';
@@ -25,7 +26,18 @@ class CartScreen extends StatefulWidget {
 class _CartScreenState extends State<CartScreen> {
   SQL_Helper helper = new SQL_Helper();
   List<CartModel> services;
+  double totalformate = 0;
   String total;
+
+  getTotal(List<CartModel> serviceslist) {
+    serviceslist.forEach((element) {
+      totalformate += int.parse(element.total);
+    });
+    final formatCurrency = new NumberFormat.simpleCurrency(locale: "ar_KWD");
+    total = formatCurrency.format(totalformate);
+  }
+
+  final GlobalKey<ScaffoldState> _globalKeyscafield = GlobalKey();
 
   String getPriceCurrency(int price, int count) {
     var donPrice = price * count;
@@ -41,6 +53,7 @@ class _CartScreenState extends State<CartScreen> {
       students.then((theList) {
         setState(() {
           this.services = theList;
+
           //  if(services.length>0){
           //   print( services[0].nameProduct);
           // for(int i=0;i<services.length;i++){
@@ -62,12 +75,14 @@ class _CartScreenState extends State<CartScreen> {
 
   @override
   Widget build(BuildContext context) {
+    totalformate = 0;
     if (services == null) {
       services = [];
       updateListView();
     }
-
+    getTotal(services);
     return Scaffold(
+      key: _globalKeyscafield,
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
@@ -92,7 +107,7 @@ class _CartScreenState extends State<CartScreen> {
         child: Stack(
           children: [
             Padding(
-              padding: const EdgeInsets.only(bottom: 80),
+              padding: const EdgeInsets.only(bottom: 50),
               child: ListView(
                 children: [
                   Container(
@@ -102,164 +117,307 @@ class _CartScreenState extends State<CartScreen> {
                       itemCount: services.length,
                       physics: const NeverScrollableScrollPhysics(),
                       itemBuilder: (BuildContext context, int index) {
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    mainAxisSize: MainAxisSize.max,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            bottom: 5, left: 5),
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                          child: services[index].imageProduct ==
-                                                  null
-                                              ? Icon(Icons.photo_sharp,
-                                                  color: Colors.black12,
-                                                  size: 60)
-                                              : Image.network(
-                                                  services[index].imageProduct,
-                                                  width: 60,
-                                                  height: 50,
-                                                  fit: BoxFit.cover,
-                                                ),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 3,
-                                      ),
-                                      Container(
-                                        width: 100,
-                                        child: Text(
-                                          services[index].nameProduct == null
-                                              ? ""
-                                              : services[index].nameProduct,
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w400,
-                                              fontSize: 12,
-                                              color: KColorecart),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Icon(
-                                    Icons.close,
-                                    color: KColorecart,
-                                  ),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      color: KColorecart,
-                                      borderRadius: BorderRadius.circular(4.0),
-                                    ),
-                                    child: Row(
+                        return Dismissible(
+                          background: Container(
+                            alignment: AlignmentDirectional.centerEnd,
+                            color: Colors.red,
+                            child: Icon(
+                              Icons.delete,
+                              color: Colors.white,
+                            ),
+                          ),
+                          key: UniqueKey(),
+                          onDismissed: (dir) {
+                            setState(() {
+                              _deleteFromDatabase(services[index].id);
+                              services.removeAt(index);
+                            });
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      mainAxisSize: MainAxisSize.max,
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      mainAxisSize: MainAxisSize.max,
                                       children: [
-                                        InkWell(
-                                          child: Container(
-                                            child: Center(
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 8,
-                                                    right: 8,
-                                                    top: 1,
-                                                    bottom: 1),
-                                                child: Text(
-                                                  "-",
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 20,
-                                                      fontWeight:
-                                                          FontWeight.bold),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              bottom: 5, left: 5),
+                                          child: services[index].imageProduct ==
+                                                  null
+                                              ? Container()
+                                              : CachedNetworkImage(
+                                                  imageUrl: services[index]
+                                                      .imageProduct,
+                                                  width: 55,
+                                                  height: 45,
+                                                  fit: BoxFit.cover,
+                                                  placeholder: (context, url) =>
+                                                      Icon(
+                                                    Icons.photo_sharp,
+                                                    color: Colors.black12,
+                                                    size: 55,
+                                                  ),
+                                                  errorWidget:
+                                                      (context, url, error) =>
+                                                          Icon(
+                                                    Icons.photo_sharp,
+                                                    color: Colors.black12,
+                                                    size: 55,
+                                                  ),
                                                 ),
-                                              ),
-                                            ),
-                                          ),
+                                        ),
+
+                                        // ClipRRect(
+                                        //   borderRadius:
+                                        //       BorderRadius.circular(8),
+                                        //   child: services[index].imageProduct ==
+                                        //           null
+                                        //       ? Icon(Icons.photo_sharp,
+                                        //           color: Colors.black12,
+                                        //           size: 60)
+                                        //       : Image.network(
+                                        //           services[index].imageProduct,
+                                        //           width: 55,
+                                        //           height: 45,
+                                        //           fit: BoxFit.cover,
+                                        //         ),
+                                        // ),
+
+                                        SizedBox(
+                                          width: 3,
                                         ),
                                         Container(
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            border:
-                                                Border.all(color: KColorecart),
-                                          ),
-                                          child: Center(
-                                            child: Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 10,
-                                                    right: 10,
-                                                    top: 1,
-                                                    bottom: 1),
-                                                child: Text(
-                                                  services[index].qty,
-                                                  style: TextStyle(
-                                                      color: KColorecart,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 15),
-                                                )),
+                                          width: 95,
+                                          child: Text(
+                                            services[index].nameProduct == null
+                                                ? ""
+                                                : services[index].nameProduct,
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 11,
+                                                color: KColorecart),
                                           ),
                                         ),
-                                        InkWell(
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              color: KColorecart,
-                                              borderRadius:
-                                                  BorderRadius.circular(4.0),
-                                            ),
-                                            child: Center(
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 5,
-                                                    right: 5,
-                                                    top: 1,
-                                                    bottom: 1),
-                                                child: Icon(
-                                                  Icons.add,
-                                                  color: Colors.white,
-                                                  size: 16,
+                                      ],
+                                    ),
+                                    Icon(
+                                      Icons.close,
+                                      color: KColorecart,
+                                      size: 23,
+                                    ),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: KColorecart,
+                                        borderRadius:
+                                            BorderRadius.circular(4.0),
+                                      ),
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          InkWell(
+                                            onTap: () {
+                                              int qunatity = int.parse(
+                                                  services[index].qty);
+                                              int totalproduct;
+                                              if (qunatity > 1) {
+                                                setState(() {
+                                                  qunatity--;
+                                                  totalproduct = int.parse(
+                                                          services[index]
+                                                              .price) *
+                                                      qunatity;
+                                                  CartModel cartModel =
+                                                      new CartModel.withId(
+                                                          services[index].id,
+                                                          services[index]
+                                                              .orderId,
+                                                          qunatity.toString(),
+                                                          services[index].price,
+                                                          services[index]
+                                                              .priceWithCurrency,
+                                                          totalproduct
+                                                              .toString(),
+                                                          services[index]
+                                                              .productId,
+                                                          services[index]
+                                                              .imageProduct,
+                                                          services[index]
+                                                              .nameProduct,
+                                                          services[index]
+                                                              .sizeProduct,
+                                                          services[index]
+                                                              .comment);
+                                                  updateDatabase(cartModel);
+                                                  updateListView();
+                                                });
+                                              } else {}
+                                            },
+                                            child: Container(
+                                              child: Center(
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                    left: 10,
+                                                    right: 10,
+                                                  ),
+                                                  child: Text(
+                                                    "-",
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 20,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
                                                 ),
                                               ),
                                             ),
                                           ),
-                                        )
-                                      ],
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              border: Border.all(
+                                                  color: KColorecart),
+                                            ),
+                                            child: Center(
+                                              child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 10,
+                                                          right: 10,
+                                                          top: 1,
+                                                          bottom: 1),
+                                                  child: Text(
+                                                    services[index].qty,
+                                                    style: TextStyle(
+                                                        color: KColorecart,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 15),
+                                                  )),
+                                            ),
+                                          ),
+                                          InkWell(
+                                            onTap: () {
+                                              int qunatity = int.parse(
+                                                  services[index].qty);
+                                              int totalproduct;
+
+                                              setState(() {
+                                                qunatity++;
+                                                totalproduct = int.parse(
+                                                        services[index].price) *
+                                                    qunatity;
+                                                CartModel cartModel =
+                                                    new CartModel.withId(
+                                                        services[index].id,
+                                                        services[index].orderId,
+                                                        qunatity.toString(),
+                                                        services[index].price,
+                                                        services[index]
+                                                            .priceWithCurrency,
+                                                        totalproduct.toString(),
+                                                        services[index]
+                                                            .productId,
+                                                        services[index]
+                                                            .imageProduct,
+                                                        services[index]
+                                                            .nameProduct,
+                                                        services[index]
+                                                            .sizeProduct,
+                                                        services[index]
+                                                            .comment);
+                                                updateDatabase(cartModel);
+                                                updateListView();
+                                              });
+                                            },
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                color: KColorecart,
+                                                borderRadius:
+                                                    BorderRadius.circular(4.0),
+                                              ),
+                                              child: Center(
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 5,
+                                                          right: 5,
+                                                          top: 1,
+                                                          bottom: 1),
+                                                  child: Icon(
+                                                    Icons.add,
+                                                    color: Colors.white,
+                                                    size: 16,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  Text(
-                                    getPriceCurrency(
-                                        int.parse(services[index].price),
-                                        int.parse(services[index].qty)).toString(),
-                                    style: TextStyle(
-                                        color: KColorecart,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 12),
-                                  )
-                                ],
-                              ),
-                              Container(
-                                height: 1.5,
-                                color: KColorecart,
-                              )
-                            ],
+                                    Text(
+                                      getPriceCurrency(
+                                              int.parse(services[index].price),
+                                              int.parse(services[index].qty))
+                                          .toString(),
+                                      style: TextStyle(
+                                          color: KColorecart,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 11),
+                                    )
+                                  ],
+                                ),
+                                Container(
+                                  height: 1.5,
+                                  color: KColorecart,
+                                )
+                              ],
+                            ),
                           ),
                         );
                       },
                     ),
                   ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8, right: 8, top: 5),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          "Total :",
+                          style: TextStyle(
+                              color: KColorecart,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15),
+                        ),
+                        SizedBox(
+                          width: 3,
+                        ),
+                        Text(
+                          total,
+                          style: TextStyle(
+                              color: KColorecart,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15),
+                        )
+                      ],
+                    ),
+                  )
                   //end item
                 ],
               ),
@@ -273,33 +431,9 @@ class _CartScreenState extends State<CartScreen> {
                 child: Column(
                   children: [
                     //Total
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8, right: 8, top: 5),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Text(
-                            "Total :",
-                            style: TextStyle(
-                                color: KColorecart,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 15),
-                          ),
-                          SizedBox(
-                            width: 3,
-                          ),
-                          Text(
-                            "5.000 KWD",
-                            style: TextStyle(
-                                color: KColorecart,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 15),
-                          )
-                        ],
-                      ),
-                    )
+
                     //end total
-                    ,
+
                     InkWell(
                       onTap: () {
                         Navigator.pushNamed(context, CheckOutScreen.id);
@@ -330,5 +464,34 @@ class _CartScreenState extends State<CartScreen> {
         ),
       ),
     );
+  }
+
+  void updateDatabase(CartModel servic) async {
+    int result;
+    result = await helper.updateStudent(servic);
+  }
+
+  void _deleteFromDatabase(int id) async {
+    if (id == null) {
+      return;
+    }
+
+    int result = await helper.deleteStudent(id);
+    if (result == 0) {
+      _globalKeyscafield.currentState.showSnackBar(SnackBar(
+        content: Text(
+          "هناك خطأ ما  ",
+        ),
+        duration: Duration(seconds: 2),
+      ));
+      // showAlertDialog('Ok Delete', "No student was deleted");
+    } else {
+      _globalKeyscafield.currentState.showSnackBar(SnackBar(
+        content: Text(
+          "تم الحــذف من الكارت  ",
+        ),
+        duration: Duration(seconds: 2),
+      ));
+    }
   }
 }

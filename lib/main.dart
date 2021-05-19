@@ -1,5 +1,6 @@
 import 'package:demo/providers/data_providers.dart';
 import 'package:demo/providers/home_provider.dart';
+import 'package:demo/providers/locations_providers.dart';
 import 'package:demo/providers/wishlist.dart';
 import 'package:demo/screens/add_new_address.dart';
 import 'package:demo/screens/cart_screen.dart';
@@ -23,22 +24,19 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 Future<void> main() async {
-  
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
 
-  runApp(
-      EasyLocalization(
+  runApp(EasyLocalization(
     child: MyApp(),
-          path: 'resources/langs',
+    path: 'resources/langs',
     saveLocale: true,
     supportedLocales: [
       Locale('en', 'US'),
       Locale('ar', 'AR'),
     ],
-    ));
+  ));
 }
-
 
 class MyApp extends StatefulWidget {
   @override
@@ -46,51 +44,44 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-@override
-
+  @override
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-    ChangeNotifierProvider<DataProviders>(
-    create: (_) => DataProviders()),
-        ChangeNotifierProvider<HomeProviders>(
-            create: (_) => HomeProviders()),
-            ChangeNotifierProvider<WishListProviders>(
-            create: (_) => WishListProviders())
-    ]
-
-       , child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          localizationsDelegates: context.localizationDelegates,
-          supportedLocales: context.supportedLocales,
-          locale: context.locale,
-          initialRoute: SpilashScreen.id,
-          routes: {
-            SpilashScreen.id: (context) => SpilashScreen(),
-            HomeScreen.id: (context) => HomeScreen(),
-            LoginScreen.id: (context) => LoginScreen(),
-            SignUpScreen.id: (context) => SignUpScreen(),
-            DetailsScreen.id: (context) => DetailsScreen(),
-            SearchScreenn.id: (context) => SearchScreenn(),
-            LocationScreen.id: (context) => LocationScreen(),
-            CartScreen.id: (context) => CartScreen(),
-            SeeAllProducts.id: (context) => SeeAllProducts(),
-            CheckOutScreen.id: (context) => CheckOutScreen(),
-            ProfileScreen.id: (context) => ProfileScreen(),
-            DetailAccount.id: (context) => DetailAccount(),
-            AddNewAddress.id: (context) => AddNewAddress(),
-            SavedAddress.id: (context) => SavedAddress(),
-            WishListScreen.id: (context) => WishListScreen(),
-            MyOrdersScreen.id: (context) => MyOrdersScreen(),
-            ReceiptScreen.id: (context) => ReceiptScreen(),
-
-          },
-        ),
-      );
-
-
-
-
+        ChangeNotifierProvider<DataProviders>(create: (_) => DataProviders()),
+        ChangeNotifierProvider<HomeProviders>(create: (_) => HomeProviders()),
+        ChangeNotifierProvider<WishListProviders>(
+            create: (_) => WishListProviders()),
+        ChangeNotifierProvider<LocationsProviders>(
+            create: (_) => LocationsProviders())
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        localizationsDelegates: context.localizationDelegates,
+        supportedLocales: context.supportedLocales,
+        locale: context.locale,
+        initialRoute: SpilashScreen.id,
+        routes: {
+          SpilashScreen.id: (context) => SpilashScreen(),
+          HomeScreen.id: (context) => HomeScreen(),
+          LoginScreen.id: (context) => LoginScreen(),
+          SignUpScreen.id: (context) => SignUpScreen(),
+          DetailsScreen.id: (context) => DetailsScreen(),
+          SearchScreenn.id: (context) => SearchScreenn(),
+          LocationScreen.id: (context) => LocationScreen(),
+          CartScreen.id: (context) => CartScreen(),
+          SeeAllProducts.id: (context) => SeeAllProducts(),
+          CheckOutScreen.id: (context) => CheckOutScreen(),
+          ProfileScreen.id: (context) => ProfileScreen(),
+          DetailAccount.id: (context) => DetailAccount(),
+          AddNewAddress.id: (context) => AddNewAddress(),
+          SavedAddress.id: (context) => SavedAddress(),
+          WishListScreen.id: (context) => WishListScreen(),
+          MyOrdersScreen.id: (context) => MyOrdersScreen(),
+          ReceiptScreen.id: (context) => ReceiptScreen(),
+        },
+      ),
+    );
   }
 }
