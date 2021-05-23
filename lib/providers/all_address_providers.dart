@@ -3,22 +3,24 @@ import 'dart:convert';
 import 'package:demo/editor/shard_prefrance.dart';
 
 import 'package:demo/pojo/data/dataProfile.dart';
+import 'package:demo/pojo/data/myAddress_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
-class ProfileProviders extends ChangeNotifier {
+class AllAddressProviders extends ChangeNotifier {
   ShardPreferencesEditor shardPreferencesEditor = ShardPreferencesEditor();
-  DataProfile dataProfile;
 
+List<DatatMyAddress> myAddressList=[];
   //======================================================
   bool loading = true;
 
   getDataProfile() async {
     // ignore: unnecessary_statements
+    myAddressList=[];
     String userId = await shardPreferencesEditor.getUserId();
     // ignore: await_only_futures
-print(userId);
-    var uri = Uri.parse("https://demo.wna.net.kw/api/profile?user_id=$userId");
+    print(userId);
+    var uri = Uri.parse("https://demo.wna.net.kw/api/my-addresses?user_id=$userId");
 
     final response = await http.get(uri, headers: {
       'Accept-country': 'kw',
@@ -30,14 +32,18 @@ print(userId);
     if (response.statusCode == 200) {
       loading = false;
       // print(response.body);
-      var dataProducts;
-      dataProducts = json.decode(response.body);
-      dataProfile=DataProfile.fromJson(dataProducts["data"]);
-      print(dataProfile.name);
+var dataProducts;
+      if (myAddressList.isEmpty) {
+        dataProducts = json.decode(response.body);
+
+        dataProducts["data"].forEach((element) {
+          myAddressList.add(DatatMyAddress.fromJson(element));
+        });
+      }
 
 
       notifyListeners();
-      ResponseProfile.fromJson(dataProducts);
+      ResponseaddMyAddress.fromJson(dataProducts);
     } else {
       loading = false;
       notifyListeners();

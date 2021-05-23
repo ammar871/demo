@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:demo/cemmon/cemmon.dart';
 import 'package:demo/constans.dart';
 import 'package:demo/editor/shard_prefrance.dart';
 import 'package:demo/network/usermodel.dart';
@@ -9,6 +10,7 @@ import 'package:demo/widgit/textField2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 
 class LoginScreen extends StatefulWidget {
@@ -131,7 +133,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       print("print  +  $_email + $_password ");
 
                       final UserLogin user =
-                          await createLogin("Admin@Wna.Net.Kw", "password", "kjsajkajlas");
+                          await createLogin(_email, _password, Cemmon.FCMToken);
                       shardPreferencesEditor.setAuthToken(user.token);
                       print("" + await shardPreferencesEditor.getAuthToken());
                       Navigator.pushNamed(context, HomeScreen.id);
@@ -207,32 +209,38 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(
                   height: 20,
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: KColoreblue),
-                    borderRadius: BorderRadius.circular(4.0),
-                  ),
-                  child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(7.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            "images/google.png",
-                            width: 15,
-                            height: 15,
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Text("Login with Google",
-                              style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                fontSize: 13,
-                                color: KColorecart,
-                              ))
-                        ],
+                InkWell(
+                  onTap: (){
+                    ////////////////////////////////////////////////////////// google
+                    googleSignInImplement();
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: KColoreblue),
+                      borderRadius: BorderRadius.circular(4.0),
+                    ),
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(7.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              "images/google.png",
+                              width: 15,
+                              height: 15,
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text("Login with Google",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 13,
+                                  color: KColorecart,
+                                ))
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -273,32 +281,38 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(
                   height: 10,
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: KColoreblue),
-                    borderRadius: BorderRadius.circular(4.0),
-                  ),
-                  child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(7.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            "images/facebook-f.png",
-                            width: 15,
-                            height: 15,
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Text("Login with Facebook",
-                              style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                fontSize: 13,
-                                color: KColorecart,
-                              ))
-                        ],
+                InkWell(
+                  onTap: (){
+
+                    //================================================= face
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: KColoreblue),
+                      borderRadius: BorderRadius.circular(4.0),
+                    ),
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(7.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              "images/facebook-f.png",
+                              width: 15,
+                              height: 15,
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text("Login with Facebook",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 13,
+                                  color: KColorecart,
+                                ))
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -357,6 +371,15 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+
+  void googleSignInImplement() async{
+    final _googleSugnIN=GoogleSignIn();
+    final GoogleSignInAccount googleSignInAccount = await _googleSugnIN.signIn();
+
+
+
+
   }
 }
 

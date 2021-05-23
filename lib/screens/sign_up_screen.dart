@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:demo/cemmon/cemmon.dart';
 import 'package:demo/editor/shard_prefrance.dart';
 import 'package:demo/network/usermodel.dart';
 import 'package:demo/pojo/data/responsRegister.dart';
@@ -40,7 +41,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       "password": password,
       "avatar": "",
       "phone": mobil,
-      "firebase_token": "towewewewead"
+      "firebase_token": Cemmon.FCMToken
     });
 
     if (response.statusCode == 201) {

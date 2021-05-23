@@ -1,7 +1,11 @@
+import 'package:demo/providers/add_new_address.dart';
+import 'package:demo/providers/all_address_providers.dart';
 import 'package:demo/providers/data_providers.dart';
+import 'package:demo/providers/delete_address.dart';
 import 'package:demo/providers/home_provider.dart';
 import 'package:demo/providers/locations_providers.dart';
 import 'package:demo/providers/profile_provider.dart';
+import 'package:demo/providers/update_address.dart';
 import 'package:demo/providers/wishlist.dart';
 import 'package:demo/screens/add_new_address.dart';
 import 'package:demo/screens/cart_screen.dart';
@@ -21,12 +25,14 @@ import 'package:demo/screens/sign_up_screen.dart';
 import 'package:demo/screens/spilash_screen.dart';
 import 'package:demo/screens/wishlist_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
+  Firebase.initializeApp();
 
   runApp(EasyLocalization(
     child: MyApp(),
@@ -57,7 +63,15 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider<LocationsProviders>(
             create: (_) => LocationsProviders()),
         ChangeNotifierProvider<ProfileProviders>(
-            create: (_) => ProfileProviders())
+            create: (_) => ProfileProviders()),
+        ChangeNotifierProvider<AddNewAddressProviders>(
+            create: (_) => AddNewAddressProviders()),
+        ChangeNotifierProvider<UpdateAddressProviders>(
+            create: (_) => UpdateAddressProviders()),
+        ChangeNotifierProvider<AllAddressProviders>(
+            create: (_) => AllAddressProviders()),
+        ChangeNotifierProvider<DeleteProviders>(
+            create: (_) => DeleteProviders())
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

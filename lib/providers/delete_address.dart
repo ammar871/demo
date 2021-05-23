@@ -6,21 +6,24 @@ import 'package:demo/pojo/data/dataProfile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
-class ProfileProviders extends ChangeNotifier {
+class DeleteProviders extends ChangeNotifier {
   ShardPreferencesEditor shardPreferencesEditor = ShardPreferencesEditor();
   DataProfile dataProfile;
 
   //======================================================
   bool loading = true;
 
-  getDataProfile() async {
+  getDataProfile(String addressId) async {
     // ignore: unnecessary_statements
     String userId = await shardPreferencesEditor.getUserId();
     // ignore: await_only_futures
-print(userId);
-    var uri = Uri.parse("https://demo.wna.net.kw/api/profile?user_id=$userId");
+    print(userId);
+    var uri = Uri.parse("https://demo.wna.net.kw/api/delete-address");
 
-    final response = await http.get(uri, headers: {
+    final response = await http.post(uri,body: {
+      "address_id": addressId,
+
+    }, headers: {
       'Accept-country': 'kw',
       'Accept-Language': await shardPreferencesEditor.getlang(),
       'Accept-currency': 'kw',

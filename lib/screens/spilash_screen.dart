@@ -1,10 +1,15 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:demo/cemmon/cemmon.dart';
 import 'package:demo/constans.dart';
 import 'package:demo/screens/home_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+
 
 class SpilashScreen extends StatefulWidget {
   static String id = "SpilashScreen";
@@ -15,6 +20,45 @@ class SpilashScreen extends StatefulWidget {
 
 class _SpilashScreenState extends State<SpilashScreen>
     with SingleTickerProviderStateMixin {
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+
+  void firebaseCloudMessaging_Listeners() {
+    if (Platform.isIOS) iOS_Permission();
+
+    messaging.getToken().then((token) {
+      print(token);
+      Cemmon.FCMToken=token;
+    });
+  }
+  //   messaging.configure(
+  //     onMessage: (Map<String, dynamic> message) async {
+  //       print('on message $message');
+  //     },
+  //     onResume: (Map<String, dynamic> message) async {
+  //       print('on resume $message');
+  //     },
+  //     onLaunch: (Map<String, dynamic> message) async {
+  //       print('on launch $message');
+  //     },
+  //   );
+  // }
+
+  void iOS_Permission() async{
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+    print(settings.authorizationStatus);
+  }
+
+
+
   var _visible = true;
   AnimationController animationController;
   Animation<double> animation;
@@ -39,6 +83,8 @@ class _SpilashScreenState extends State<SpilashScreen>
   @override
   void initState() {
     super.initState();
+    firebaseCloudMessaging_Listeners();
+
     animationController = new AnimationController(
       vsync: this,
       duration: new Duration(seconds: 2),

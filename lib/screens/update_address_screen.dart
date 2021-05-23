@@ -1,5 +1,7 @@
 import 'package:custom_dropdown/custom_dropdown.dart';
+import 'package:demo/pojo/data/myAddress_model.dart';
 import 'package:demo/providers/add_new_address.dart';
+import 'package:demo/providers/update_address.dart';
 import 'package:demo/screens/profile_screen.dart';
 import 'package:demo/screens/saved_address.dart';
 import 'package:demo/widgit/deowp/custom_dropdawn.dart';
@@ -13,14 +15,20 @@ import 'package:provider/provider.dart';
 
 import '../constans.dart';
 
-class AddNewAddress extends StatefulWidget {
+class UpdateAddressAddress extends StatefulWidget {
   static String id = "AddNewAddress";
+  DatatMyAddress myAddressS;
+
+  UpdateAddressAddress({@required this.myAddressS});
 
   @override
-  _AddNewAddressState createState() => _AddNewAddressState();
+  _UpdateAddressAddress createState() =>
+      _UpdateAddressAddress(myAddress: myAddressS);
 }
 
-class _AddNewAddressState extends State<AddNewAddress> {
+class _UpdateAddressAddress extends State<UpdateAddressAddress> {
+  final DatatMyAddress myAddress;
+
   final List<FavouriteFoodModel> _favouriteFoodModelList = [
     FavouriteFoodModel(foodName: 'Pudding'),
     FavouriteFoodModel(foodName: 'Frozen Yogurt'),
@@ -50,7 +58,9 @@ class _AddNewAddressState extends State<AddNewAddress> {
     });
   }
 
-  AddNewAddressProviders profileProviders;
+  _UpdateAddressAddress({@required this.myAddress});
+
+  UpdateAddressProviders profileProviders;
 
   initData() async {
     if (profileProviders == null) {
@@ -60,9 +70,12 @@ class _AddNewAddressState extends State<AddNewAddress> {
 
   @override
   void initState() {
+    print(myAddress.name);
     _favouriteFoodModelDropdownList =
         _buildFavouriteFoodModelDropdown(_favouriteFoodModelList);
     _favouriteFoodModel = _favouriteFoodModelList[0];
+
+    getContrlorText();
     super.initState();
   }
 
@@ -128,6 +141,7 @@ class _AddNewAddressState extends State<AddNewAddress> {
                     height: 10,
                   ),
                   CustomTextFyled2(
+                    controller: _controllername,
                     hint: "Address Name",
                     onClick: (value) {
                       _name = value;
@@ -189,6 +203,7 @@ class _AddNewAddressState extends State<AddNewAddress> {
                     children: [
                       Expanded(
                         child: CustomTextFyled2(
+                            controller: _controllerblock,
                             onClick: (value) {
                               _block = value;
                               print(_block);
@@ -200,6 +215,7 @@ class _AddNewAddressState extends State<AddNewAddress> {
                       ),
                       Expanded(
                         child: CustomTextFyled2(
+                            controller: _controllersteat,
                             onClick: (value) {
                               _streat = value;
                               print(_streat);
@@ -217,6 +233,7 @@ class _AddNewAddressState extends State<AddNewAddress> {
                     children: [
                       Expanded(
                         child: CustomTextFyled2(
+                            controller: _controlleravenue,
                             onClick: (value) {
                               _avenue = value;
                               print(_avenue);
@@ -228,6 +245,7 @@ class _AddNewAddressState extends State<AddNewAddress> {
                       ),
                       Expanded(
                         child: CustomTextFyled2(
+                            controller: _controllehouse,
                             onClick: (value) {
                               _house = value;
                               print(_house);
@@ -245,6 +263,7 @@ class _AddNewAddressState extends State<AddNewAddress> {
                     children: [
                       Expanded(
                         child: CustomTextFyled2(
+                            controller: _controllerphone,
                             onClick: (value) {
                               _mobil = value;
                               print(_mobil);
@@ -256,6 +275,7 @@ class _AddNewAddressState extends State<AddNewAddress> {
                       ),
                       Expanded(
                         child: CustomTextFyled2(
+                            controller: _controllerEmail,
                             onClick: (value) {
                               _email = value;
                               print(_email);
@@ -275,7 +295,8 @@ class _AddNewAddressState extends State<AddNewAddress> {
 
                 if (_globalKey.currentState.validate()) {
                   _globalKey.currentState.save();
-                  profileProviders.addNewAddress(_name, "aaa", "aaaaa", _email,
+
+                  profileProviders.addNewAddress(myAddress.id.toString(),_name, "aaa", "aaaaa", _email,
                       _mobil, _streat, _avenue, _house, _block);
 
                   if (profileProviders.code == 200) {
@@ -288,7 +309,7 @@ class _AddNewAddressState extends State<AddNewAddress> {
                         textColor: Colors.white,
                         fontSize: 15.0);
 
-                    Navigator.pushNamed(context, SavedAddress.id);
+                    Navigator.pushReplacementNamed(context, SavedAddress.id);
                   }
                 } else {
                   _globalKeyscafield.currentState.showSnackBar(SnackBar(
@@ -331,5 +352,18 @@ class _AddNewAddressState extends State<AddNewAddress> {
         ),
       ),
     );
+  }
+
+  void getContrlorText() {
+    _controllerEmail.text = myAddress.email;
+    _controllerphone.text = myAddress.phone;
+    _controllehouse.text = myAddress.apartmentNo;
+    _controllername.text = myAddress.name;
+    _controllersteat.text = myAddress.street;
+    _controllerblock.text = myAddress.address;
+     _controlleravenue.text = myAddress.area;
+    // _controllehouse.text = myAddress.apartmentNo;
+    // _controllername.text = myAddress.name;
+    // _controllersteat.text = myAddress.street;
   }
 }
