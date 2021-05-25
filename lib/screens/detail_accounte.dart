@@ -54,9 +54,14 @@ class _DetailAccountState extends State<DetailAccount> {
         backgroundColor: Colors.white,
         leading: InkWell(
           onTap: () {},
-          child: Icon(
-            Icons.keyboard_arrow_left_outlined,
-            color: KColorecart,
+          child: InkWell(
+            onTap: (){
+              Navigator.pop(context);
+            },
+            child: Icon(
+              Icons.keyboard_arrow_left_outlined,
+              color: KColorecart,
+            ),
           ),
         ),
         centerTitle: true,
@@ -122,7 +127,7 @@ class _DetailAccountState extends State<DetailAccount> {
                           onClick: (value) {
                             profileProviders.dataProfile.phone = value;
                           },
-                          hint: "Email",
+                          hint: "Mobil",
                         ),
                       ],
                     ),

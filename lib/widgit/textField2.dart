@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../constans.dart';
 
@@ -41,8 +42,9 @@ class CustomTextFyled2 extends StatelessWidget {
 
             }
           },
+          keyboardType: hint=="Mobil" ?TextInputType.phone :TextInputType.text,
           onSaved: onClick,
-          obscureText: hint=="Password" ? true :false,
+          obscureText: hint=="Password" ? true : false,
           style: TextStyle(
               fontSize: 14, fontWeight: FontWeight.w400, color: KColorecart),
           decoration: InputDecoration(

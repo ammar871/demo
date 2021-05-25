@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:demo/cemmon/cemmon.dart';
 import 'package:demo/editor/shard_prefrance.dart';
-import 'package:demo/network/usermodel.dart';
+
 import 'package:demo/pojo/data/responsRegister.dart';
 import 'package:demo/widgit/textField2.dart';
 import 'package:flutter/cupertino.dart';
@@ -130,7 +130,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         onClick: (value) {
                           _mobil = value;
                         },
-                        hint: "Mobile"),
+                        hint: "Mobil"),
                     SizedBox(
                       height: 35,
                     ),

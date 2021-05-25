@@ -83,4 +83,9 @@ class ShardPreferencesEditor{
     logined = pref.getInt(this.USER_SELECT_SERVICE) ?? null;
     return logined;
   }
+
+  void loigOut()async{
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    pref.clear();
+  }
 }

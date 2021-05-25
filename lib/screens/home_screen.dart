@@ -1,5 +1,6 @@
+import 'package:demo/cemmon/cemmon.dart';
 import 'package:demo/constans.dart';
-import 'package:demo/editor/cemmon.dart';
+
 import 'package:demo/editor/shard_prefrance.dart';
 
 import 'package:demo/screens/cart_screen.dart';
@@ -11,7 +12,7 @@ import 'package:demo/screens/profile_screen.dart';
 import 'package:demo/screens/search_screen.dart';
 import 'package:demo/screens/spilash_screen.dart';
 import 'package:demo/screens/wishlist_screen.dart';
-
+import 'package:demo/cemmon/cemmon.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +28,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   ShardPreferencesEditor shardPreferencesEditor = ShardPreferencesEditor();
 
-  Cemmon cemmon = Cemmon();
 
   int _currentIndex = 0;
   String lange = "";
@@ -77,9 +77,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
     Future.delayed(Duration.zero, () {
       getlangNmaed();
-      cemmon.getLogin();
-      loadIsLogin = cemmon.loginName;
-      print(cemmon.loginName);
+
+
+
     });
   }
 
@@ -107,7 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
               // ignore: deprecated_member_use
               ,
               // ignore: deprecated_member_use
-              title: Text("Products"),
+              title: Text("product".tr().toString()),
               backgroundColor: KColoreblue),
           BottomNavigationBarItem(
               icon: Icon(Icons.location_on)
@@ -121,14 +121,14 @@ class _HomeScreenState extends State<HomeScreen> {
               // ignore: deprecated_member_use
               ,
               // ignore: deprecated_member_use
-              title: Text("My Orders"),
+              title: Text('myorders'.tr().toString()),
               backgroundColor: KColoreblue),
           BottomNavigationBarItem(
               icon: Icon(Icons.person_pin)
               // ignore: deprecated_member_use
               ,
               // ignore: deprecated_member_use
-              title: Text("My Profile"),
+              title: Text('myprofil'.tr().toString()),
               backgroundColor: KColoreblue)
         ],
         onTap: (index) {
@@ -219,13 +219,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: InkWell(
                     onTap: () {
                       setState(() {
-                        selectServic==1;
-                        shardPreferencesEditor.setSelectService(1);
+                        Cemmon.SELECT_SERVICE=1;
+                       /// shardPreferencesEditor.setSelectService(1);
                       });
                     },
                     child: Container(
                         decoration: BoxDecoration(
-                          color: (selectServic == null || selectServic == 1)
+                          color: Cemmon.SELECT_SERVICE == 1
                               ? KColorecart
                               : null,
                           border: Border.all(color: KColoreblue),
@@ -241,7 +241,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: Text(
                                   "Delivery",
                                   style: TextStyle(
-                                      color: (selectServic == null || selectServic == 1)
+                                      color: Cemmon.SELECT_SERVICE == 1
                                           ? Colors.white
                                           : null,
                                       fontWeight: FontWeight.w400),
@@ -258,13 +258,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: InkWell(
                         onTap: (){
                           setState(() {
-                            selectServic==2;
-                            shardPreferencesEditor.setSelectService(2);
+                           Cemmon.SELECT_SERVICE=0;
+                          //  shardPreferencesEditor.setSelectService(2);
                           });
                         },
                         child: Container(
                             decoration: BoxDecoration(
-                              color: selectServic == 2
+                              color:   Cemmon.SELECT_SERVICE== 0
                                   ? KColorecart
                                   : null,
                               border: Border.all(color: KColoreblue),
@@ -280,7 +280,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     child: Text(
                                       "Pick up",
                                       style: TextStyle(
-                                          color:  selectServic == 2
+                                          color:    Cemmon.SELECT_SERVICE == 0
                                               ? Colors.white
                                               : null,
                                           fontWeight: FontWeight.w400),
@@ -304,7 +304,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Navigator.pop(context);
                 },
                 child: _itemMenue(
-                  name: "Home",
+                  name: 'home'.tr(),
                   lang: lange,
                 ),
               ),
@@ -323,7 +323,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 onTap: () {
                   Navigator.pushNamed(context, LoginScreen.id);
                 },
-                child: _itemMenue(name: "Login", lang: lange),
+                child: _itemMenue(name: 'login'.tr().toString(), lang: lange),
               ),
 
 
@@ -335,7 +335,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     });
                     Navigator.pop(context);
                   },
-                  child: _itemMenue(name: "My orders", lang: lange)),
+                  child: _itemMenue(name: "myorders".tr().toString(), lang: lange)),
               SizedBox(
                 height: 10,
               ),

@@ -95,8 +95,11 @@ class _LocationScreenState extends State<LocationScreen> {
                                   child: Padding(
                                     padding: const EdgeInsets.all(3.0),
                                     child: GoogleMap(
-                                      onMapCreated:mapCreated ,
-
+                                      onMapCreated: _onMapCreated ,
+                                      zoomGesturesEnabled: true,
+                                      myLocationEnabled: true,
+                                      compassEnabled: true,
+                                        myLocationButtonEnabled: false,
                                       initialCameraPosition: CameraPosition(
                                         target: new LatLng(
                                             double.parse(locationProviders
@@ -239,8 +242,9 @@ class _LocationScreenState extends State<LocationScreen> {
   List<Marker> getMarkers(LatLng latLng, String title) {
     List<Marker> _markers = <Marker>[
       Marker(
+
           markerId: MarkerId('SomeId'),
-          position: LatLng(38.123, 35.123),
+          position: latLng,
           infoWindow: InfoWindow(title: title))
     ];
     return _markers;
@@ -274,4 +278,11 @@ class _LocationScreenState extends State<LocationScreen> {
 
 
   }
+
+  void _onMapCreated(GoogleMapController controller) {
+    _controller = controller;
+
+  }
+
+
 }

@@ -1,6 +1,9 @@
 {
   "location": "Location",
   "checkout": "Checkout",
-  "home": "Home"
-
+  "home": "Home",
+  "product": "Products",
+  "myorders": "My Orders",
+  "myprofil": "My Profile",
+  "login": "Login"
 }

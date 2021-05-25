@@ -10,55 +10,52 @@ import 'package:provider/provider.dart';
 import '../constans.dart';
 import 'login_screen.dart';
 
-class ProfileScreen extends StatefulWidget{
-
-
-  static String id="ProfileScreen";
+class ProfileScreen extends StatefulWidget {
+  static String id = "ProfileScreen";
 
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-
+  final GlobalKey<ScaffoldState> _globalKeyscafield = GlobalKey();
   ShardPreferencesEditor shardPreferencesEditor = ShardPreferencesEditor();
   bool loginName = false;
   ProfileProviders profileProviders;
+
   initData() async {
     if (profileProviders == null) {
       profileProviders = Provider.of(context);
 
-
       profileProviders.loading = true;
       profileProviders.getDataProfile();
-
-
-      }
     }
+  }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
   }
+
   getLogin() async {
     loginName = await shardPreferencesEditor.getIsLogin();
     print(loginName);
   }
+
   @override
   Widget build(BuildContext context) {
     getLogin();
     // initData();
     return Scaffold(
-
+      key: _globalKeyscafield,
       body: Container(
         child: FutureBuilder(
-          future:shardPreferencesEditor.getIsLogin() ,
-          builder: (BuildContext context,AsyncSnapshot<bool> snapshot){
-            if(snapshot.hasData){
-              if(snapshot.data == true){
-                return    Container(
+          future: shardPreferencesEditor.getIsLogin(),
+          builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+            if (snapshot.hasData) {
+              if (snapshot.data == true) {
+                return Container(
                   child: Padding(
                     padding: EdgeInsets.all(8),
                     child: Column(
@@ -67,7 +64,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         Column(
                           children: [
                             InkWell(
-                              onTap: (){
+                              onTap: () {
                                 Navigator.pushNamed(context, DetailAccount.id);
                               },
                               child: Container(
@@ -78,16 +75,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 height: 50,
                                 width: MediaQuery.of(context).size.width,
                                 child: Padding(
-                                  padding: const EdgeInsets.only(left: 8,right: 8),
+                                  padding:
+                                      const EdgeInsets.only(left: 8, right: 8),
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
                                         "Account Detail",
                                         style: TextStyle(
-                                            color: Colors.white,
-
-                                            fontSize: 15),
+                                            color: Colors.white, fontSize: 15),
                                       ),
                                       Icon(
                                         Icons.arrow_forward_ios_sharp,
@@ -99,10 +96,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                               ),
                             ),
-                            SizedBox(height: 10,),
+                            SizedBox(
+                              height: 10,
+                            ),
                             InkWell(
-                              onTap: (){
-
+                              onTap: () {
                                 Navigator.pushNamed(context, AddNewAddress.id);
                               },
                               child: Container(
@@ -113,16 +111,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 height: 50,
                                 width: MediaQuery.of(context).size.width,
                                 child: Padding(
-                                  padding: const EdgeInsets.only(left: 8,right: 8),
+                                  padding:
+                                      const EdgeInsets.only(left: 8, right: 8),
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
                                         "Add new Address",
                                         style: TextStyle(
-                                            color: Colors.white,
-
-                                            fontSize: 15),
+                                            color: Colors.white, fontSize: 15),
                                       ),
                                       Icon(
                                         Icons.arrow_forward_ios_sharp,
@@ -134,9 +132,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                               ),
                             ),
-                            SizedBox(height: 10,),
+                            SizedBox(
+                              height: 10,
+                            ),
                             InkWell(
-                              onTap: (){
+                              onTap: () {
                                 Navigator.pushNamed(context, SavedAddress.id);
                               },
                               child: Container(
@@ -147,16 +147,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 height: 50,
                                 width: MediaQuery.of(context).size.width,
                                 child: Padding(
-                                  padding: const EdgeInsets.only(left: 8,right: 8),
+                                  padding:
+                                      const EdgeInsets.only(left: 8, right: 8),
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
                                         "Saved Addresses",
                                         style: TextStyle(
-                                            color: Colors.white,
-
-                                            fontSize: 15),
+                                            color: Colors.white, fontSize: 15),
                                       ),
                                       Icon(
                                         Icons.arrow_forward_ios_sharp,
@@ -170,10 +170,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             )
                           ],
                         ),
-
                         InkWell(
-                          onTap: () {
+                          onTap: () async {
+                            await shardPreferencesEditor.loigOut();
 
+                            _globalKeyscafield.currentState
+                                // ignore: deprecated_member_use
+                                .showSnackBar(SnackBar(
+                              content: Text(
+                                "تم تسجيل الخروج   ",
+                              ),
+                              duration: Duration(seconds: 2),
+                            ));
                           },
                           child: Container(
                             decoration: BoxDecoration(
@@ -195,12 +203,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         )
                       ],
                     ),
-
                   ),
                 );
-
-              }else{
-            return  Padding(
+              } else {
+                return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
                     height: double.infinity,
@@ -210,16 +216,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         children: [
                           Text(
                             "Please Login",
-                            style: TextStyle(
-                                fontSize: 20, color: KColorecart),
+                            style: TextStyle(fontSize: 20, color: KColorecart),
                           ),
                           SizedBox(
                             height: 30,
                           ),
                           InkWell(
                             onTap: () {
-                              Navigator.pushNamed(
-                                  context, LoginScreen.id);
+                              Navigator.pushNamed(context, LoginScreen.id);
                             },
                             child: Container(
                               height: 40,
@@ -230,14 +234,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                               child: Center(
                                   child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text("Go To Login",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 15,
-                                          color: Colors.white,
-                                        )),
-                                  )),
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text("Go To Login",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 15,
+                                      color: Colors.white,
+                                    )),
+                              )),
                             ),
                           ),
                         ],
@@ -246,9 +250,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 );
               }
-
-            }else{
-              return  Padding(
+            } else {
+              return Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
                   height: double.infinity,
@@ -258,16 +261,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       children: [
                         Text(
                           "Please Login",
-                          style: TextStyle(
-                              fontSize: 20, color: KColorecart),
+                          style: TextStyle(fontSize: 20, color: KColorecart),
                         ),
                         SizedBox(
                           height: 30,
                         ),
                         InkWell(
                           onTap: () {
-                            Navigator.pushNamed(
-                                context, LoginScreen.id);
+                            Navigator.pushNamed(context, LoginScreen.id);
                           },
                           child: Container(
                             height: 40,
@@ -278,14 +279,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                             child: Center(
                                 child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text("Go To Login",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 15,
-                                        color: Colors.white,
-                                      )),
-                                )),
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text("Go To Login",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 15,
+                                    color: Colors.white,
+                                  )),
+                            )),
                           ),
                         ),
                       ],

@@ -71,7 +71,7 @@ class _SpilashScreenState extends State<SpilashScreen>
   }
 
   void navigationPage() {
-    Navigator.of(context).pushNamed(HomeScreen.id);
+    Navigator.of(context).pushReplacementNamed(HomeScreen.id);
   }
 
   @override
@@ -83,6 +83,9 @@ class _SpilashScreenState extends State<SpilashScreen>
   @override
   void initState() {
     super.initState();
+
+
+    print("${Cemmon.SELECT_SERVICE} ,Cemmeon ");
     firebaseCloudMessaging_Listeners();
 
     animationController = new AnimationController(

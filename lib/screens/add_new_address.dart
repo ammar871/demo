@@ -46,6 +46,7 @@ class _AddNewAddressState extends State<AddNewAddress> {
   _onChangeFavouriteFoodModelDropdown(FavouriteFoodModel favouriteFoodModel) {
     setState(() {
       _favouriteFoodModel = favouriteFoodModel;
+
       print(_favouriteFoodModel.foodName);
     });
   }
