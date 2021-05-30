@@ -3,24 +3,26 @@ import 'dart:convert';
 import 'package:demo/cemmon/helper.dart';
 import 'package:demo/editor/shard_prefrance.dart';
 
-import 'package:demo/pojo/data/dataProfile.dart';
+
+import 'package:demo/pojo/data/rsponse_myOrders.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
-class ProfileProviders extends ChangeNotifier {
+class MyOrdersProviders extends ChangeNotifier {
   ShardPreferencesEditor shardPreferencesEditor = ShardPreferencesEditor();
-  DataProfile dataProfile;
-
+ 
+  List<ItemElement> listOrder = [];
+    List<DataOrder> listAll = [];
+  ResponseMyOrder responseMyOrder;
   //======================================================
   bool loading = true;
 
-  getDataProfile() async {
+  getDataMyOrders() async {
     // ignore: unnecessary_statements
     String userId = await shardPreferencesEditor.getUserId();
     // ignore: await_only_futures
     print(userId);
-    var uri =
-        Uri.parse("https://demo.wna.net.kw/api/profile?user_id=${Helper.USER_ID}");
+    var uri = Uri.parse("https://demo.wna.net.kw/api/my-orders?user_id=1");
 
     final response = await http.get(uri, headers: {
       'Accept-country': 'kw',
@@ -30,19 +32,18 @@ class ProfileProviders extends ChangeNotifier {
     });
 
     if (response.statusCode == 200) {
-      // print(response.body);
+      loading = false;
+      print(response.body);
       var dataProducts;
       dataProducts = json.decode(response.body);
-      dataProfile = DataProfile.fromJson(dataProducts["data"]);
-      print(dataProfile.name);
-      Helper.name = dataProfile.name;
-      Helper.email = dataProfile.email;
-      Helper.phone = dataProfile.phone;
-      Helper.createdAt = dataProfile.createdAt.toString();
 
-      loading = false;
+      dataProducts["data"].forEach((element) {
+        listAll.add(DataOrder.fromJson(element));
+      });
+      print("${listAll[0].id}, id ");
       notifyListeners();
-      ResponseProfile.fromJson(dataProducts);
+      responseMyOrder = ResponseMyOrder.fromJson(dataProducts);
+      print(responseMyOrder.data.length.toString());
     } else {
       loading = false;
       notifyListeners();

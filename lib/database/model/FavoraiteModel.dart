@@ -1,90 +1,115 @@
-class FavoraiteModel{
+class FavoraiteModel {
 
+  int _id;
+  String _price;
+  String _priceWithCurrency;
+  String _productId;
+  String _imageProduct;
+  String _nameProduct;
+  String _descProduct;
+  String get nameProduct => _nameProduct;
 
-  String _id2 ;
-  String _orderId2 ;
-  String _pricefav ;
-  String _pricewithcurrencyfav ;
-  String _productIdfav ;
-  String __imageProductfav ;
-  String __nameProductfav;
+  set nameProduct(String value) {
+    _nameProduct = value;
+  }
 
-  FavoraiteModel(this._orderId2, this._pricefav, this._pricewithcurrencyfav,
-      this._productIdfav, this.__imageProductfav, this.__nameProductfav);
+  FavoraiteModel(
+    this._price,
+    this._priceWithCurrency,
+    this._productId,
+    this._imageProduct,
+    this._nameProduct
+      ,this._descProduct
+  );
 
   FavoraiteModel.withId(
-      this._id2,
-      this._orderId2,
-      this._pricefav,
-      this._pricewithcurrencyfav,
-      this._productIdfav,
-      this.__imageProductfav,
-      this.__nameProductfav);
+    this._id,
+    this._price,
+    this._priceWithCurrency,
+    this._productId,
+    this._imageProduct,
+    this._nameProduct,
+      this._descProduct
+  );
 
-  String get _nameProductfav => __nameProductfav;
+  String get descProduct => _descProduct;
 
-  set _nameProductfav(String value) {
-    __nameProductfav = value;
+  set descProduct(String value) {
+    _descProduct = value;
   }
 
-  String get _imageProductfav => __imageProductfav;
+  String get priceWithCurrency => _priceWithCurrency;
 
-  set _imageProductfav(String value) {
-    __imageProductfav = value;
+  set priceWithCurrency(String value) {
+    _priceWithCurrency = value;
   }
 
-  String get productIdfav => _productIdfav;
+  String get productId => _productId;
 
-  set productIdfav(String value) {
-    _productIdfav = value;
+  set productId(String value) {
+    _productId = value;
   }
 
-  String get pricewithcurrencyfav => _pricewithcurrencyfav;
+  String get price => _price;
 
-  set pricewithcurrencyfav(String value) {
-    _pricewithcurrencyfav = value;
+  set price(String value) {
+    _price = value;
   }
 
-  String get pricefav => _pricefav;
+  int get id => _id;
 
-  set pricefav(String value) {
-    _pricefav = value;
+  set id(int value) {
+    _id = value;
   }
 
-  String get orderId2 => _orderId2;
-
-  set orderId2(String value) {
-    _orderId2 = value;
-  }
-
-  String get id2 => _id2;
-
-  set id2(String value) {
-    _id2 = value;
-  }
   Map<String, dynamic> toMap() {
     var map = Map<String, dynamic>();
-    map["id"] = this._id2;
-    map["orderId"] = this._orderId2;
-    map["price"] = this._pricefav;
-    map["priceWithCurrency"] = this._pricewithcurrencyfav;
-    map["productId"] = this._productIdfav;
-    map["imageProduct"] = this.__imageProductfav;
-    map["nameProduct"] = this.__nameProductfav;
+    map["id"] = this._id;
 
+    map["price"] = this._price;
+    map["priceWithCurrency"] = this._priceWithCurrency;
+
+    map["productId"] = this._productId;
+    map["imageProduct"] = this._imageProduct;
+    map["nameProduct"] = this._nameProduct;
+    map["descProduct"] = this._descProduct;
     return map;
   }
+
   FavoraiteModel.getMap(Map<String, dynamic> map) {
-    this._id2 = map["id"];
-    this._orderId2 = map["orderId"];
+    this._id = map["id"];
 
-    this._pricefav = map["price"];
-    this._pricewithcurrencyfav = map["priceWithCurrency"];
+    this._price = map["price"];
+    this._priceWithCurrency = map["priceWithCurrency"];
 
-    this._productIdfav = map["productId"];
-    this.__imageProductfav = map["imageProduct"];
-    this.__nameProductfav = map["nameProduct"];
+    this._productId = map["productId"];
+    this._imageProduct = map["imageProduct"];
+    this._nameProduct = map["nameProduct"];
+ this._descProduct=   map["descProduct"];
+  }
 
+  String get imageProduct => _imageProduct;
 
+  set imageProduct(String value) {
+    _imageProduct = value;
   }
 }
+
+// class SubTotal {
+//   int _price;
+//   double _formatted;
+//
+//   int get price => _price;
+//
+//   set price(int value) {
+//     _price = value;
+//   }
+//
+//   SubTotal(this._price, this._formatted);
+//
+//   double get formatted => _formatted;
+//
+//   set formatted(double value) {
+//     _formatted = value;
+//   }
+// }

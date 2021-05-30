@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:demo/cemmon/cemmon.dart';
+import 'package:demo/cemmon/helper.dart';
 import 'package:demo/editor/shard_prefrance.dart';
 
 import 'package:demo/pojo/data/responsRegister.dart';
@@ -49,8 +50,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
       data = DataRegister.fromJson(dataDecode["data"]);
       print(data.id.toString());
       shardPreferencesEditor.setUserId(data.id.toString());
-
       shardPreferencesEditor.setIsLogin(true);
+      Helper.IS_LOGIN = true;
+      Helper.USER_ID = data.id.toString();
       setState(() {
         isloading = false;
       });

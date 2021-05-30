@@ -11,6 +11,7 @@ import 'package:demo/widgit/wedgits.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:money2/money2.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -31,7 +32,10 @@ class _CartScreenState extends State<CartScreen> {
 
   getTotal(List<CartModel> serviceslist) {
     serviceslist.forEach((element) {
-      totalformate += int.parse(element.total);
+      if(element.total!=null){
+        totalformate += int.parse(element.total);
+      }
+
     });
     final formatCurrency = new NumberFormat.simpleCurrency(locale: "ar_KWD");
     total = formatCurrency.format(totalformate);
@@ -177,21 +181,7 @@ class _CartScreenState extends State<CartScreen> {
                                                 ),
                                         ),
 
-                                        // ClipRRect(
-                                        //   borderRadius:
-                                        //       BorderRadius.circular(8),
-                                        //   child: services[index].imageProduct ==
-                                        //           null
-                                        //       ? Icon(Icons.photo_sharp,
-                                        //           color: Colors.black12,
-                                        //           size: 60)
-                                        //       : Image.network(
-                                        //           services[index].imageProduct,
-                                        //           width: 55,
-                                        //           height: 45,
-                                        //           fit: BoxFit.cover,
-                                        //         ),
-                                        // ),
+
 
                                         SizedBox(
                                           width: 3,
@@ -436,7 +426,24 @@ class _CartScreenState extends State<CartScreen> {
 
                     InkWell(
                       onTap: () {
-                        Navigator.pushNamed(context, CheckOutScreen.id);
+                        if(services.isEmpty){
+                          Fluttertoast.showToast(
+                              msg: "السلة فارغة",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 1,
+                              backgroundColor: Colors.black54,
+                              textColor: Colors.white,
+                              fontSize: 15.0);
+                        }else{
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CheckOutScreen(services,total),
+                              ));
+
+                          Navigator.pushNamed(context, CheckOutScreen.id);
+                        }
                       },
                       child: Container(
                         decoration: BoxDecoration(

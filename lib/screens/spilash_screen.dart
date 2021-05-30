@@ -2,14 +2,15 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:demo/cemmon/cemmon.dart';
+import 'package:demo/cemmon/helper.dart';
 import 'package:demo/constans.dart';
+import 'package:demo/editor/shard_prefrance.dart';
 import 'package:demo/screens/home_screen.dart';
-import 'package:firebase_core/firebase_core.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-
 
 class SpilashScreen extends StatefulWidget {
   static String id = "SpilashScreen";
@@ -21,30 +22,31 @@ class SpilashScreen extends StatefulWidget {
 class _SpilashScreenState extends State<SpilashScreen>
     with SingleTickerProviderStateMixin {
   FirebaseMessaging messaging = FirebaseMessaging.instance;
-
-
+  ShardPreferencesEditor shardPreferencesEditor = ShardPreferencesEditor();
   void firebaseCloudMessaging_Listeners() {
     if (Platform.isIOS) iOS_Permission();
 
     messaging.getToken().then((token) {
       print(token);
-      Cemmon.FCMToken=token;
+      Cemmon.FCMToken = token;
     });
   }
-  //   messaging.configure(
-  //     onMessage: (Map<String, dynamic> message) async {
-  //       print('on message $message');
-  //     },
-  //     onResume: (Map<String, dynamic> message) async {
-  //       print('on resume $message');
-  //     },
-  //     onLaunch: (Map<String, dynamic> message) async {
-  //       print('on launch $message');
-  //     },
-  //   );
-  // }
 
-  void iOS_Permission() async{
+
+
+
+
+  getDataFromShared() async {
+    Helper.IS_LOGIN = await shardPreferencesEditor.getIsLogin();
+    Helper.USER_ID = await shardPreferencesEditor.getUserId();
+    Helper.LANG = await shardPreferencesEditor.getlang();
+    Helper.USER_TOKEN = await shardPreferencesEditor.getAuthToken();
+
+    print(
+        "${Helper.IS_LOGIN} , ${Helper.USER_ID}, ${Helper.LANG}, ${Helper.USER_TOKEN}");
+  }
+
+  void iOS_Permission() async {
     NotificationSettings settings = await messaging.requestPermission(
       alert: true,
       announcement: false,
@@ -57,17 +59,13 @@ class _SpilashScreenState extends State<SpilashScreen>
     print(settings.authorizationStatus);
   }
 
-
-
   var _visible = true;
   AnimationController animationController;
   Animation<double> animation;
 
   startTime() async {
     var _duration = new Duration(seconds: 3);
-    return new Timer(_duration,
-      navigationPage
-    );
+    return new Timer(_duration, navigationPage);
   }
 
   void navigationPage() {
@@ -83,8 +81,7 @@ class _SpilashScreenState extends State<SpilashScreen>
   @override
   void initState() {
     super.initState();
-
-
+    getDataFromShared();
     print("${Cemmon.SELECT_SERVICE} ,Cemmeon ");
     firebaseCloudMessaging_Listeners();
 
@@ -116,7 +113,9 @@ class _SpilashScreenState extends State<SpilashScreen>
         children: [
           Center(
             child: Image(
-              image: AssetImage("images/logo.png"),width: 200,height: 80,
+              image: AssetImage("images/logo.png"),
+              width: 200,
+              height: 80,
               fit: BoxFit.contain,
             ),
           ),

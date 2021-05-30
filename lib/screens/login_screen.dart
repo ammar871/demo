@@ -1,6 +1,6 @@
 import 'dart:convert';
-
 import 'package:demo/cemmon/cemmon.dart';
+import 'package:demo/cemmon/helper.dart';
 import 'package:demo/constans.dart';
 import 'package:demo/editor/shard_prefrance.dart';
 import 'package:demo/network/usermodel.dart';
@@ -42,6 +42,8 @@ class _LoginScreenState extends State<LoginScreen> {
       data = Data.fromJson(dataDecode["data"]);
       shardPreferencesEditor.setUserId(data.id.toString());
       shardPreferencesEditor.setIsLogin(true);
+      Helper.IS_LOGIN = true;
+      Helper.USER_ID = data.id.toString();
 
       print(await shardPreferencesEditor.getIsLogin());
 
@@ -210,9 +212,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 20,
                 ),
                 InkWell(
-                  onTap: (){
+                  onTap: () {
                     ////////////////////////////////////////////////////////// google
-                    googleSignInImplement();
+                    loginWithGoogle();
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -248,42 +250,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(
                   height: 10,
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: KColoreblue),
-                    borderRadius: BorderRadius.circular(4.0),
-                  ),
-                  child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(7.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            "images/apple.png",
-                            width: 15,
-                            height: 15,
-                          ),
-                          SizedBox(
-                            width: 18,
-                          ),
-                          Text("Login with Apple",
-                              style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                fontSize: 13,
-                                color: KColorecart,
-                              ))
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                InkWell(
-                  onTap: (){
 
+                InkWell(
+                  onTap: () {
                     //================================================= face
                   },
                   child: Container(
@@ -320,20 +289,25 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(
                   height: 10,
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: KColoreblue),
-                    borderRadius: BorderRadius.circular(4.0),
-                  ),
-                  child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(7.0),
-                      child: Text("Continue as guest",
-                          style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 13,
-                            color: KColorecart,
-                          )),
+                InkWell(
+                  onTap: (){
+                    Navigator.pushNamed(context, HomeScreen.id);
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: KColoreblue),
+                      borderRadius: BorderRadius.circular(4.0),
+                    ),
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(7.0),
+                        child: Text("Continue as guest",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 13,
+                              color: KColorecart,
+                            )),
+                      ),
                     ),
                   ),
                 ),
@@ -373,14 +347,25 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void googleSignInImplement() async{
-    final _googleSugnIN=GoogleSignIn();
-    final GoogleSignInAccount googleSignInAccount = await _googleSugnIN.signIn();
+  loginWithGoogle() async {
+    GoogleSignIn _googleSignIn = GoogleSignIn();
+  //  _googleSignIn.signOut();
+    GoogleSignInAccount googleuser = await _googleSignIn.signIn();
+    GoogleSignInAuthentication googleSignInAuthentication =
+        await googleuser.authentication;
+    var params = Map();
+    print('email : ${googleuser.email}');
+    params['email'] = googleuser.email;
+    params['name'] = googleuser.displayName;
+    params['device_token'] = 'abc';
+    params['id'] = googleSignInAuthentication.accessToken;
 
-
-
-
+    print(params.toString() + " gooooooooo");
   }
 }
 
 // ignore: camel_case_types
+
+
+
+

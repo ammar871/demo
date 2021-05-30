@@ -33,6 +33,7 @@ class CustomTextFyled2 extends StatelessWidget {
       height: 35,
       child: Center(
         child: TextFormField(
+          
           controller: controller,
           // ignore: missing_return
           validator: (value) {

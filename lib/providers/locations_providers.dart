@@ -1,7 +1,5 @@
 import 'dart:convert';
-
 import 'package:demo/editor/shard_prefrance.dart';
-import 'package:demo/network/response_products.dart';
 import 'package:demo/pojo/data/location_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
@@ -9,7 +7,7 @@ import 'package:http/http.dart' as http;
 class LocationsProviders extends ChangeNotifier {
   ShardPreferencesEditor shardPreferencesEditor = ShardPreferencesEditor();
   List<DataLocations> locations = [];
-
+  List<String> locationsname = [];
   //======================================================
   bool loading = true;
 
@@ -17,7 +15,7 @@ class LocationsProviders extends ChangeNotifier {
     // ignore: unnecessary_statements
 
     // ignore: await_only_futures
-
+    locationsname = [];
     locations = [];
     var uri = Uri.parse(
         "https://demo.wna.net.kw/api/locations?user_id=1");
@@ -39,6 +37,12 @@ class LocationsProviders extends ChangeNotifier {
 
         dataProducts["data"].forEach((element) {
           locations.add(DataLocations.fromJson(element));
+
+        });
+
+        locations.forEach((element) {
+          locationsname.add("${element.name} , ${element.block}");
+          print(locationsname[0]);
         });
       }
 

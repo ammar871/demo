@@ -1,15 +1,18 @@
+import 'package:demo/examples/example.dart';
+
 import 'package:demo/providers/add_new_address.dart';
 import 'package:demo/providers/all_address_providers.dart';
+import 'package:demo/providers/checkOutProviders.dart';
 import 'package:demo/providers/data_providers.dart';
 import 'package:demo/providers/delete_address.dart';
 import 'package:demo/providers/home_provider.dart';
 import 'package:demo/providers/locations_providers.dart';
+import 'package:demo/providers/my_orderProviders.dart';
 import 'package:demo/providers/profile_provider.dart';
 import 'package:demo/providers/update_address.dart';
 import 'package:demo/providers/wishlist.dart';
 import 'package:demo/screens/add_new_address.dart';
 import 'package:demo/screens/cart_screen.dart';
-import 'package:demo/screens/check_out.dart';
 import 'package:demo/screens/detail_accounte.dart';
 import 'package:demo/screens/detailes_screen.dart';
 import 'package:demo/screens/home_screen.dart';
@@ -18,7 +21,6 @@ import 'package:demo/screens/login_screen.dart';
 import 'package:demo/screens/my_orders.dart';
 import 'package:demo/screens/products_screen/products_SeeAll.dart';
 import 'package:demo/screens/profile_screen.dart';
-import 'package:demo/screens/recipet_screen.dart';
 import 'package:demo/screens/saved_address.dart';
 import 'package:demo/screens/search_screen.dart';
 import 'package:demo/screens/sign_up_screen.dart';
@@ -56,8 +58,10 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<DataProviders>(create: (_) => DataProviders()),
-        ChangeNotifierProvider<HomeProviders>(create: (_) => HomeProviders()),
+        ChangeNotifierProvider<DataProviders>(
+           create: (_) => DataProviders()),
+        ChangeNotifierProvider<HomeProviders>(
+           create: (_) => HomeProviders()),
         ChangeNotifierProvider<WishListProviders>(
             create: (_) => WishListProviders()),
         ChangeNotifierProvider<LocationsProviders>(
@@ -71,7 +75,11 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider<AllAddressProviders>(
             create: (_) => AllAddressProviders()),
         ChangeNotifierProvider<DeleteProviders>(
-            create: (_) => DeleteProviders())
+            create: (_) => DeleteProviders()),
+        ChangeNotifierProvider<CheckProviders>(
+            create: (_) => CheckProviders()),
+            ChangeNotifierProvider<MyOrdersProviders>(
+            create: (_) => MyOrdersProviders())
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -89,14 +97,13 @@ class _MyAppState extends State<MyApp> {
           LocationScreen.id: (context) => LocationScreen(),
           CartScreen.id: (context) => CartScreen(),
           SeeAllProducts.id: (context) => SeeAllProducts(),
-          CheckOutScreen.id: (context) => CheckOutScreen(),
           ProfileScreen.id: (context) => ProfileScreen(),
           DetailAccount.id: (context) => DetailAccount(),
           AddNewAddress.id: (context) => AddNewAddress(),
           SavedAddress.id: (context) => SavedAddress(),
           WishListScreen.id: (context) => WishListScreen(),
           MyOrdersScreen.id: (context) => MyOrdersScreen(),
-          ReceiptScreen.id: (context) => ReceiptScreen(),
+           MyFatora.id: (context) => MyFatora(),
         },
       ),
     );

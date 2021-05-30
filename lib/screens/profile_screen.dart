@@ -1,3 +1,5 @@
+import 'package:demo/cemmon/helper.dart';
+import 'package:demo/database/database_helber.dart';
 import 'package:demo/editor/shard_prefrance.dart';
 import 'package:demo/providers/profile_provider.dart';
 import 'package:demo/screens/add_new_address.dart';
@@ -29,8 +31,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
       profileProviders.loading = true;
       profileProviders.getDataProfile();
+
+      Helper.name = profileProviders.dataProfile.name;
+     Helper.email = profileProviders.dataProfile.email;
+      Helper.phone = profileProviders.dataProfile.phone;
+     Helper.createdAt = profileProviders.dataProfile.createdAt.toString();
     }
+    
   }
+
+
 
   @override
   void initState() {
@@ -43,6 +53,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     print(loginName);
   }
 
+  SQL_Helper helper = new SQL_Helper();
+
+
+             
+
   @override
   Widget build(BuildContext context) {
     getLogin();
@@ -50,12 +65,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       key: _globalKeyscafield,
       body: Container(
-        child: FutureBuilder(
-          future: shardPreferencesEditor.getIsLogin(),
-          builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-            if (snapshot.hasData) {
-              if (snapshot.data == true) {
-                return Container(
+        child:Helper.IS_LOGIN!=null ?
+         Container(
                   child: Padding(
                     padding: EdgeInsets.all(8),
                     child: Column(
@@ -173,7 +184,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         InkWell(
                           onTap: () async {
                             await shardPreferencesEditor.loigOut();
-
+                            Helper.IS_LOGIN = null;
+                            Helper.USER_ID = null;
+                      
+                            helper.DropTableFave();
+                            helper.DropTable();
                             _globalKeyscafield.currentState
                                 // ignore: deprecated_member_use
                                 .showSnackBar(SnackBar(
@@ -204,9 +219,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ],
                     ),
                   ),
-                );
-              } else {
-                return Padding(
+                ):Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
                     height: double.infinity,
@@ -215,89 +228,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            "Please Login",
-                            style: TextStyle(fontSize: 20, color: KColorecart),
+                            "Please login to continue",
+                            style: TextStyle(fontSize: 18, color: KColorecart),
                           ),
                           SizedBox(
-                            height: 30,
+                            height: 10,
                           ),
                           InkWell(
                             onTap: () {
                               Navigator.pushNamed(context, LoginScreen.id);
                             },
                             child: Container(
-                              height: 40,
+                              height: 50,
                               decoration: BoxDecoration(
                                 border: Border.all(color: KColoreblue),
                                 borderRadius: BorderRadius.circular(4.0),
                                 color: KColorecart,
                               ),
                               child: Center(
-                                  child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text("Go To Login",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 15,
-                                      color: Colors.white,
-                                    )),
-                              )),
+                                  child: Text("Go To Login",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 15,
+                                        color: Colors.white,
+                                      ))),
                             ),
                           ),
                         ],
                       ),
                     ),
                   ),
-                );
-              }
-            } else {
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  height: double.infinity,
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Please Login",
-                          style: TextStyle(fontSize: 20, color: KColorecart),
-                        ),
-                        SizedBox(
-                          height: 30,
-                        ),
-                        InkWell(
-                          onTap: () {
-                            Navigator.pushNamed(context, LoginScreen.id);
-                          },
-                          child: Container(
-                            height: 40,
-                            decoration: BoxDecoration(
-                              border: Border.all(color: KColoreblue),
-                              borderRadius: BorderRadius.circular(4.0),
-                              color: KColorecart,
-                            ),
-                            child: Center(
-                                child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text("Go To Login",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 15,
-                                    color: Colors.white,
-                                  )),
-                            )),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
                 ),
-              );
-            }
-          },
-        ),
-      ),
+              ),
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:demo/cemmon/helper.dart';
 import 'package:demo/editor/shard_prefrance.dart';
 import 'package:demo/providers/profile_provider.dart';
 import 'package:demo/widgit/textField2.dart';
@@ -31,16 +32,31 @@ class _DetailAccountState extends State<DetailAccount> {
   bool isloading = false;
   ProfileProviders profileProviders;
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    initData();
+  }
+
   initData() async {
     if (profileProviders == null) {
       profileProviders = Provider.of(context);
 
       profileProviders.loading = true;
       profileProviders.getDataProfile();
-      _controllername.text = profileProviders.dataProfile.name;
-      _controllerEmail.text = profileProviders.dataProfile.email;
-      _controllerphone.text = profileProviders.dataProfile.phone;
-      _controllercreated.text = profileProviders.dataProfile.createdAt.toString();
+      _controllername.text = Helper.name;
+      _controllerEmail.text = Helper.email;
+      _controllerphone.text = Helper.phone;
+      _controllercreated.text = Helper.createdAt;
+
+      _controllername.value = _controllername.value.copyWith(
+        text: Helper.name,
+        selection: TextSelection.collapsed(offset: Helper.name.length),
+      );
+
+      print(
+          "${_controllername.text},${_controllerEmail.text},${_controllerphone.text},${_controllercreated.text}");
     }
   }
 
@@ -55,7 +71,7 @@ class _DetailAccountState extends State<DetailAccount> {
         leading: InkWell(
           onTap: () {},
           child: InkWell(
-            onTap: (){
+            onTap: () {
               Navigator.pop(context);
             },
             child: Icon(

@@ -1,11 +1,35 @@
+
+import 'dart:typed_data';
+
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:demo/pdfHelper/mobilPdf.dart';
+import 'package:demo/pojo/data/rsponse_myOrders.dart';
 import 'package:demo/widgit/wedgits.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
+
+import 'package:syncfusion_flutter_pdf/pdf.dart';
 
 import '../constans.dart';
 
-class ReceiptScreen extends StatelessWidget {
+class ReceiptScreen extends StatefulWidget {
   static String id = "ReceiptScreen";
+  DataOrder dataOrder;
+  ReceiptScreen(this.dataOrder);
+  @override
+  _ReceiptScreenState createState() => _ReceiptScreenState(this.dataOrder);
+}
+
+class _ReceiptScreenState extends State<ReceiptScreen> {
+  DataOrder dataOrder;
+
+  _ReceiptScreenState(this.dataOrder);
+  @override
+  void initState() {
+    super.initState();
+    print(dataOrder.id);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,9 +49,7 @@ class ReceiptScreen extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(3.0),
-
         child: ListView(
-
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -53,20 +75,25 @@ class ReceiptScreen extends StatelessWidget {
                 SizedBox(
                   width: 8,
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Color(0xFFECECEC),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        left: 20, right: 20, top: 4, bottom: 4),
-                    child: Center(
-                      child: Text(
-                        "Download",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 13,
-                            color: Colors.black),
+                ElevatedButton(
+                  onPressed: () {
+                    _CreatPdf();
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Color(0xFFECECEC),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          left: 20, right: 20, top: 4, bottom: 4),
+                      child: Center(
+                        child: Text(
+                          "Download",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 13,
+                              color: Colors.black),
+                        ),
                       ),
                     ),
                   ),
@@ -84,7 +111,6 @@ class ReceiptScreen extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
-
                   children: [
                     SizedBox(
                       height: 5,
@@ -92,11 +118,11 @@ class ReceiptScreen extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Text("Invoice No. 1", style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            color: KColorecart,
-                            fontSize: 13)),
-
+                        Text("Invoice No. ${dataOrder.id}",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                color: KColorecart,
+                                fontSize: 13)),
                       ],
                     ),
                     SizedBox(
@@ -105,34 +131,37 @@ class ReceiptScreen extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("Order Successful", style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            color: KColorecart,
-                            fontSize: 13)),
-
+                        Text("Order Successful",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                color: KColorecart,
+                                fontSize: 13)),
                       ],
                     ),
                     SizedBox(
                       height: 15,
                     ),
-                    viewDetailsCheckOut(context,"Order No.","123456789"),
+                    viewDetailsCheckOut(
+                        context, "Order No.", dataOrder.id.toString()),
                     SizedBox(
                       height: 10,
                     ),
-                    viewDetailsCheckOut(context,"Address","abc 1, st 1, block 1, Kuwait city, Kuwait"),
+                    viewDetailsCheckOut(context, "Address",
+                        "${dataOrder.address},${dataOrder.area},${dataOrder.city}"),
                     SizedBox(
                       height: 10,
                     ),
-                    viewDetailsCheckOut(context,"Phone","abc 1, st 1, block 1, Kuwait city, Kuwait"),
+                    viewDetailsCheckOut(context, "Phone", "${dataOrder.phone}"),
 
                     //address end =========================================================================
                     SizedBox(
                       height: 25,
                     ),
-                    Text("Summary order", style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        color: KColorecart,
-                        fontSize: 13)),
+                    Text("Summary order",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            color: KColorecart,
+                            fontSize: 13)),
                     SizedBox(
                       height: 15,
                     ),
@@ -142,7 +171,7 @@ class ReceiptScreen extends StatelessWidget {
                         children: [
                           ListView.builder(
                             shrinkWrap: true,
-                            itemCount: 2,
+                            itemCount: dataOrder.items.length,
                             physics: const NeverScrollableScrollPhysics(),
                             itemBuilder: (BuildContext context, int index) {
                               return Padding(
@@ -151,26 +180,35 @@ class ReceiptScreen extends StatelessWidget {
                                   children: [
                                     Row(
                                       mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                          MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
                                       children: [
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
                                           mainAxisSize: MainAxisSize.max,
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.center,
+                                              CrossAxisAlignment.center,
                                           children: [
                                             Padding(
                                               padding: const EdgeInsets.only(
                                                   bottom: 5, left: 5),
-                                              child: ClipRRect(
-                                                borderRadius:
-                                                BorderRadius.circular(8),
-                                                child: Image.asset(
-                                                  "images/image.png",
-                                                  width: 70,
-                                                  height: 60,
-                                                  fit: BoxFit.cover,
+                                              child: CachedNetworkImage(
+                                                imageUrl: dataOrder
+                                                    .items[0].item.name,
+                                                placeholder: (context, url) =>
+                                                    Icon(
+                                                  Icons.photo_sharp,
+                                                  color: Colors.black12,
+                                                  size: 70,
+                                                ),
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        Icon(
+                                                  Icons.photo_sharp,
+                                                  color: Colors.black12,
+                                                  size: 70,
                                                 ),
                                               ),
                                             ),
@@ -178,9 +216,9 @@ class ReceiptScreen extends StatelessWidget {
                                               width: 3,
                                             ),
                                             Container(
-
                                               child: Text(
-                                                "Products",
+                                                dataOrder
+                                                    .items[index].item.name,
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.w400,
                                                     fontSize: 13,
@@ -195,21 +233,27 @@ class ReceiptScreen extends StatelessWidget {
                                         ),
                                         Container(
                                             decoration: BoxDecoration(
-
-
-                                                border: Border.all(color: KColorecart)
-                                            ),
+                                                border: Border.all(
+                                                    color: KColorecart)),
                                             child: Padding(
-                                              padding: const EdgeInsets.only(left: 13,right: 13,top: 6,bottom: 6),
-                                              child: Text("2",style:TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 13,
-                                                  color: KColorecart),
+                                              padding: const EdgeInsets.only(
+                                                  left: 13,
+                                                  right: 13,
+                                                  top: 6,
+                                                  bottom: 6),
+                                              child: Text(
+                                                dataOrder.items[index].qty
+                                                    .toString(),
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 13,
+                                                    color: KColorecart),
                                               ),
                                             )),
-
                                         Text(
-                                          "3.000 KWD",
+                                          dataOrder
+                                              .items[index].item.price.formatted
+                                              .toString(),
                                           style: TextStyle(
                                               color: KColorecart,
                                               fontWeight: FontWeight.w500,
@@ -218,7 +262,8 @@ class ReceiptScreen extends StatelessWidget {
                                       ],
                                     ),
                                     Padding(
-                                      padding: const EdgeInsets.only(left: 10,right: 10),
+                                      padding: const EdgeInsets.only(
+                                          left: 10, right: 10),
                                       child: Container(
                                         height: 1.5,
                                         color: KColorecart,
@@ -229,11 +274,11 @@ class ReceiptScreen extends StatelessWidget {
                               );
                             },
                           ),
-
                           Column(
                             children: [
                               Padding(
-                                padding: const EdgeInsets.only(left: 10, right: 10, top: 5),
+                                padding: const EdgeInsets.only(
+                                    left: 10, right: 10, top: 5),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
@@ -248,7 +293,7 @@ class ReceiptScreen extends StatelessWidget {
                                       width: 3,
                                     ),
                                     Text(
-                                      "5.000 KWD",
+                                      dataOrder.subTotal.formatted.toString(),
                                       style: TextStyle(
                                           color: KColorecart,
                                           fontWeight: FontWeight.w400,
@@ -258,7 +303,8 @@ class ReceiptScreen extends StatelessWidget {
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(left: 10, right: 10, top: 5,bottom: 8),
+                                padding: const EdgeInsets.only(
+                                    left: 10, right: 10, top: 5, bottom: 8),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
@@ -281,47 +327,48 @@ class ReceiptScreen extends StatelessWidget {
                                     )
                                   ],
                                 ),
-
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(left: 10, right: 10,bottom: 8),
+                                padding: const EdgeInsets.only(
+                                    left: 10, right: 10, bottom: 8),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
                                     Container(
                                       width: 120,
                                       height: 2,
-                      decoration: BoxDecoration(
+                                      decoration: BoxDecoration(
                                         color: KColorecart,
-              ),
+                                      ),
                                     ),
                                   ],
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(left: 10, right: 10, top: 5,bottom: 8),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Text(
-                                      "Total: ",
-                                      style: TextStyle(
-                                          color: KColorecart,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 13),
-                                    ),
-                                    SizedBox(
-                                      width: 3,
-                                    ),
-                                    Text(
-                                      "5.000 KWD",
-                                      style: TextStyle(
-                                          color: KColorecart,
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 13),
-                                    )
-                                  ],
-                                ))
+                                  padding: const EdgeInsets.only(
+                                      left: 10, right: 10, top: 5, bottom: 8),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        "Total: ",
+                                        style: TextStyle(
+                                            color: KColorecart,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 13),
+                                      ),
+                                      SizedBox(
+                                        width: 3,
+                                      ),
+                                      Text(
+                                        dataOrder.subTotal.formatted.toString(),
+                                        style: TextStyle(
+                                            color: KColorecart,
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 13),
+                                      )
+                                    ],
+                                  ))
                             ],
                           )
                         ],
@@ -337,34 +384,77 @@ class ReceiptScreen extends StatelessWidget {
     );
   }
 
-  Column viewDetailsCheckOut(BuildContext context,String title,String desc) {
+  Column viewDetailsCheckOut(BuildContext context, String title, String desc) {
     return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(title, style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          color: KColorecart,
-                          fontSize: 13)),
-                      SizedBox(
-                        height: 5,
-                      )
-                      ,Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: 35,
-                        decoration:
-                        BoxDecoration(border: Border.all(color: KColorecart)),
-                        child:Align(
-                          alignment: Alignment.centerLeft,
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child: Text(desc, style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                color: KColorecart,
-                                fontSize: 13)),
-                          ) ,
-                        ) ,
-                      )
-                    ],
-                  );
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(title,
+            style: TextStyle(
+                fontWeight: FontWeight.w500, color: KColorecart, fontSize: 13)),
+        SizedBox(
+          height: 5,
+        ),
+        Container(
+          width: MediaQuery.of(context).size.width,
+          height: 35,
+          decoration: BoxDecoration(border: Border.all(color: KColorecart)),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: Text(desc,
+                  style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      color: KColorecart,
+                      fontSize: 13)),
+            ),
+          ),
+        )
+      ],
+    );
+  }
+
+
+  Future<void> _CreatPdf() async {
+    PdfDocument decoment = PdfDocument();
+    final pages = decoment.pages.add();
+
+
+
+    
+
+
+    // pages.graphics.drawString(
+    //     "Order ID :${dataOrder.id} \n Phone: ${dataOrder.phone} \n ",  PdfTrueTypeFont(  , 12),
+    // brush: PdfBrushes.black,
+    // bounds: Rect.fromLTWH(0, 0, 100, 50));
+
+    // pages.graphics.drawString(
+    //     " Order ID : ${dataOrder.id} \n Phone: ${dataOrder.phone} \n Address : ${dataOrder.address} ${dataOrder.area}${dataOrder.city} ",
+    //     PdfStandardFont( PdfFontFamily.symbol , 30 ));
+
+    // pages.graphics.drawString("Phone: ${dataOrder.phone}",
+    //     PdfStandardFont(PdfFontFamily.symbol, 30));
+
+    // var detailsOrder = StringBuffer();
+    // dataOrder.items.forEach((element) {
+    //   detailsOrder.write(
+    //       "${element.item.name}  , ${element.item.description} , ${element.qty}, ${element.price}  ,\n");
+    // });
+    // pages.graphics.drawString("Details Order \n:${detailsOrder} \n",
+    //     PdfStandardFont(PdfFontFamily.symbol, 30));
+
+    // pages.graphics.drawString("Details Order \n:${dataOrder.total.price} \n",
+    //     PdfStandardFont(PdfFontFamily.symbol, 30));
+
+   
+    List<int> byts = decoment.save();
+      decoment.dispose();
+    saveAndLaunchFile(byts, 'Output.pdf');
+  }
+
+  Future<Uint8List> _readImageData(String name) async {
+    final data = await rootBundle.load('images/$name');
+    return data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
   }
 }

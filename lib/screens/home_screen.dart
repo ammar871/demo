@@ -1,5 +1,7 @@
 import 'package:demo/cemmon/cemmon.dart';
+import 'package:demo/cemmon/helper.dart';
 import 'package:demo/constans.dart';
+import 'package:demo/database/database_helber.dart';
 
 import 'package:demo/editor/shard_prefrance.dart';
 
@@ -28,7 +30,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   ShardPreferencesEditor shardPreferencesEditor = ShardPreferencesEditor();
 
-
   int _currentIndex = 0;
   String lange = "";
 
@@ -49,6 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
         });
       }
       shardPreferencesEditor.setlang(prefix);
+      Helper.LANG = prefix;
     } else {
       if (langnameref == "ar") {
         setState(() {
@@ -77,9 +79,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
     Future.delayed(Duration.zero, () {
       getlangNmaed();
-
-
-
     });
   }
 
@@ -151,9 +150,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       InkWell(
-                        onTap: () {
-
-                        },
+                        onTap: () {},
                         child: Image.asset(
                           "images/arbic.png",
                           width: 30,
@@ -171,7 +168,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               // ignore: unnecessary_statements, deprecated_member_use
                               context.locale = Locale('ar', 'AR');
                               shardPreferencesEditor.setlang("ar");
-
+                              Helper.LANG = "ar";
                               lange = "English";
 
                               Navigator.pushNamed(context, SpilashScreen.id);
@@ -182,6 +179,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               // ignore: deprecated_member_use
                               context.locale = Locale('en', 'US');
                               shardPreferencesEditor.setlang("en");
+                              Helper.LANG = "en";
                               lange = "Arabic";
 
                               Navigator.pushNamed(context, SpilashScreen.id);
@@ -219,15 +217,15 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: InkWell(
                     onTap: () {
                       setState(() {
-                        Cemmon.SELECT_SERVICE=1;
-                       /// shardPreferencesEditor.setSelectService(1);
+                        Cemmon.SELECT_SERVICE = 1;
+
+                        /// shardPreferencesEditor.setSelectService(1);
                       });
                     },
                     child: Container(
                         decoration: BoxDecoration(
-                          color: Cemmon.SELECT_SERVICE == 1
-                              ? KColorecart
-                              : null,
+                          color:
+                              Cemmon.SELECT_SERVICE == 1 ? KColorecart : null,
                           border: Border.all(color: KColoreblue),
                           borderRadius: BorderRadius.circular(5.0),
                         ),
@@ -256,40 +254,39 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   Expanded(
                       child: InkWell(
-                        onTap: (){
-                          setState(() {
-                           Cemmon.SELECT_SERVICE=0;
-                          //  shardPreferencesEditor.setSelectService(2);
-                          });
-                        },
-                        child: Container(
-                            decoration: BoxDecoration(
-                              color:   Cemmon.SELECT_SERVICE== 0
-                                  ? KColorecart
-                                  : null,
-                              border: Border.all(color: KColoreblue),
-                              borderRadius: BorderRadius.circular(5.0),
-                            ),
+                    onTap: () {
+                      setState(() {
+                        Cemmon.SELECT_SERVICE = 0;
+                        //  shardPreferencesEditor.setSelectService(2);
+                      });
+                    },
+                    child: Container(
+                        decoration: BoxDecoration(
+                          color:
+                              Cemmon.SELECT_SERVICE == 0 ? KColorecart : null,
+                          border: Border.all(color: KColoreblue),
+                          borderRadius: BorderRadius.circular(5.0),
+                        ),
+                        child: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                top: 1, bottom: 1, left: 18, right: 18),
                             child: Center(
                               child: Padding(
-                                padding: const EdgeInsets.only(
-                                    top: 1, bottom: 1, left: 18, right: 18),
-                                child: Center(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(5.0),
-                                    child: Text(
-                                      "Pick up",
-                                      style: TextStyle(
-                                          color:    Cemmon.SELECT_SERVICE == 0
-                                              ? Colors.white
-                                              : null,
-                                          fontWeight: FontWeight.w400),
-                                    ),
-                                  ),
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(
+                                  "Pick up",
+                                  style: TextStyle(
+                                      color: Cemmon.SELECT_SERVICE == 0
+                                          ? Colors.white
+                                          : null,
+                                      fontWeight: FontWeight.w400),
                                 ),
                               ),
-                            )),
-                      ))
+                            ),
+                          ),
+                        )),
+                  ))
                 ],
               ),
               SizedBox(
@@ -308,7 +305,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   lang: lange,
                 ),
               ),
-
               InkWell(
                 onTap: () {
                   Navigator.pop(context);
@@ -325,8 +321,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
                 child: _itemMenue(name: 'login'.tr().toString(), lang: lange),
               ),
-
-
               InkWell(
                   onTap: () {
                     setState(() {
@@ -335,7 +329,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     });
                     Navigator.pop(context);
                   },
-                  child: _itemMenue(name: "myorders".tr().toString(), lang: lange)),
+                  child: _itemMenue(
+                      name: "myorders".tr().toString(), lang: lange)),
               SizedBox(
                 height: 10,
               ),
@@ -471,7 +466,7 @@ class _HomeScreenState extends State<HomeScreen> {
               fontWeight: FontWeight.bold, fontSize: 15, color: KColorecart),
         ),
       );
-    } else if(_currentIndex == 2){
+    } else if (_currentIndex == 2) {
       return AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
@@ -489,7 +484,7 @@ class _HomeScreenState extends State<HomeScreen> {
               fontWeight: FontWeight.bold, fontSize: 15, color: KColorecart),
         ),
       );
-    }else{
+    } else {
       return AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
