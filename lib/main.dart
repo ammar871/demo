@@ -9,6 +9,7 @@ import 'package:demo/providers/home_provider.dart';
 import 'package:demo/providers/locations_providers.dart';
 import 'package:demo/providers/my_orderProviders.dart';
 import 'package:demo/providers/profile_provider.dart';
+import 'package:demo/providers/searsh_providers.dart';
 import 'package:demo/providers/update_address.dart';
 import 'package:demo/providers/wishlist.dart';
 import 'package:demo/screens/add_new_address.dart';
@@ -79,7 +80,9 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider<CheckProviders>(
             create: (_) => CheckProviders()),
             ChangeNotifierProvider<MyOrdersProviders>(
-            create: (_) => MyOrdersProviders())
+            create: (_) => MyOrdersProviders()),
+        ChangeNotifierProvider<SearchProviders>(
+            create: (_) => SearchProviders())
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

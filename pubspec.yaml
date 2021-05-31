@@ -23,7 +23,16 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+ # create pdf document
+  pdf: ^3.1.0
 
+ 
+
+  # open pdf document
+  open_file: ^3.1.0
+
+  # format dates for invoice
+  intl: ^0.17.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -39,8 +48,8 @@ dependencies:
   http: ^0.13.3
   sqflite: ^2.0.0+3
   path_provider: ^2.0.1
-  pdf: ^3.3.0
-  intl: ^0.17.0
+ 
+  
   money2: ^2.0.3
   geolocator: ^7.0.3
   google_maps_flutter: ^2.0.5
@@ -52,7 +61,8 @@ dependencies:
   json_serializable: ^4.1.2
   myfatoorah_flutter: ^1.0.18	
   syncfusion_flutter_pdf: ^19.1.65-beta
-  open_file: ^3.1.0
+  google_fonts: ^2.1.0
+ 
  
 dev_dependencies:
   flutter_test:

@@ -69,20 +69,34 @@ class _CartScreenState extends State<CartScreen> {
         });
       });
     });
+
+  }
+bool getLastIndex(){
+
+  for (int i=0;i<services.length;i++) {
+    if (i == services.length -1) {
+      print(i.toString());
+     return true;
+
+    } else{
+      return false;
+    }
   }
 
+}
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
   }
-
+int lastIndex;
   @override
   Widget build(BuildContext context) {
     totalformate = 0;
     if (services == null) {
       services = [];
       updateListView();
+      getLastIndex();
     }
     getTotal(services);
     return Scaffold(
@@ -92,7 +106,7 @@ class _CartScreenState extends State<CartScreen> {
         backgroundColor: Colors.white,
         leading: InkWell(
           onTap: () {
-            Navigator.pushNamed(context, HomeScreen.id);
+            Navigator.pop(context);
           },
           child: Icon(
             Icons.keyboard_arrow_left_outlined,
@@ -372,7 +386,7 @@ class _CartScreenState extends State<CartScreen> {
                                     )
                                   ],
                                 ),
-                                Container(
+                             index == services.length-1 ?Container():   Container(
                                   height: 1.5,
                                   color: KColorecart,
                                 )

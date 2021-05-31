@@ -93,7 +93,9 @@ class _AddNewAddressState extends State<AddNewAddress> {
         elevation: 0,
         backgroundColor: Colors.white,
         leading: InkWell(
-          onTap: () {},
+          onTap: () {
+            Navigator.pop(context);
+          },
           child: Icon(
             Icons.keyboard_arrow_left_outlined,
             color: KColorecart,

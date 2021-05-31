@@ -1,4 +1,10 @@
 
+import 'dart:io';
+import 'package:demo/api/pdf_api.dart';
+import 'package:demo/api/pdf_invoice_api.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -8,6 +14,7 @@ import 'package:demo/widgit/wedgits.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:path_provider/path_provider.dart';
 
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 
@@ -23,12 +30,18 @@ class ReceiptScreen extends StatefulWidget {
 
 class _ReceiptScreenState extends State<ReceiptScreen> {
   DataOrder dataOrder;
-
+  var detailsOrder;
   _ReceiptScreenState(this.dataOrder);
   @override
   void initState() {
+     detailsOrder = StringBuffer();
+    dataOrder.items.forEach((element) {
+      detailsOrder.write(
+          "\n { name Product : ${element.item.name}  ,\n Descrption Product :  ${element.item.description} , \n  Quntity :${element.qty}, \n  Price ${element.price.price}  ,\n }");
+    });
+
     super.initState();
-    print(dataOrder.id);
+    print(detailsOrder);
   }
 
   @override
@@ -75,9 +88,13 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
                 SizedBox(
                   width: 8,
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    _CreatPdf();
+                InkWell(
+                  onTap: () async{
+
+                    
+                     final pdfFile = await PdfInvoiceApi.generate(dataOrder);
+
+                    PdfApi.openFile(pdfFile);
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -414,14 +431,54 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
     );
   }
 
+  Future<PdfFont> getFont(TextStyle style) async {
+    //Get the external storage directory
+    Directory directory = await getApplicationSupportDirectory();
+    //Create an empty file to write the font data
+    File file = File('${directory.path}/${style.fontFamily}.ttf');
+    List<int>fontBytes;
+    //Check if entity with the path exists
+    if (file.existsSync()) {
+      fontBytes = await file.readAsBytes();
+    }
+    if (fontBytes != null && fontBytes.isNotEmpty) {
+      //Return the google font
+      return PdfTrueTypeFont(fontBytes, 12);
+    } else {
+      //Return the default font
+      return PdfStandardFont(PdfFontFamily.helvetica, 12);
+    }
+  }
 
   Future<void> _CreatPdf() async {
-    PdfDocument decoment = PdfDocument();
-    final pages = decoment.pages.add();
 
 
 
-    
+
+
+
+    PdfDocument document = PdfDocument();
+    //Add a page
+    PdfPage page = document.pages.add();
+    //Set the font
+    PdfFont font = await getFont(GoogleFonts.lato());
+    //Draw a text
+    page.graphics.drawString("Order ID :${dataOrder.id} \n Phone: ${dataOrder.phone}", font,
+        brush: PdfBrushes.black, bounds: Rect.fromLTWH(0, 0, 200, 30));
+    page.graphics.drawString("Address ${dataOrder.address},${dataOrder.area},${dataOrder.city}", font,
+        brush: PdfBrushes.black, bounds: Rect.fromLTWH(0, 60, 200, 30));
+
+    page.graphics.drawString("Details Order : $detailsOrder", font,
+        brush: PdfBrushes.black, bounds: Rect.fromLTWH(0,120, 200, 30));
+
+
+    // pages.graphics.drawString("Details Order \n:${detailsOrder} \n",
+    //     PdfStandardFont(PdfFontFamily.symbol, 30));
+    //Save the document
+    List<int> bytes = document.save();
+    //Dispose the document
+    document.dispose();
+    saveAndLaunchFile(bytes, 'Output.pdf');
 
 
     // pages.graphics.drawString(
@@ -436,21 +493,15 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
     // pages.graphics.drawString("Phone: ${dataOrder.phone}",
     //     PdfStandardFont(PdfFontFamily.symbol, 30));
 
-    // var detailsOrder = StringBuffer();
-    // dataOrder.items.forEach((element) {
-    //   detailsOrder.write(
-    //       "${element.item.name}  , ${element.item.description} , ${element.qty}, ${element.price}  ,\n");
-    // });
-    // pages.graphics.drawString("Details Order \n:${detailsOrder} \n",
-    //     PdfStandardFont(PdfFontFamily.symbol, 30));
+
 
     // pages.graphics.drawString("Details Order \n:${dataOrder.total.price} \n",
     //     PdfStandardFont(PdfFontFamily.symbol, 30));
 
    
-    List<int> byts = decoment.save();
-      decoment.dispose();
-    saveAndLaunchFile(byts, 'Output.pdf');
+    // List<int> byts = decoment.save();
+    //   decoment.dispose();
+    // saveAndLaunchFile(byts, 'Output.pdf');
   }
 
   Future<Uint8List> _readImageData(String name) async {
