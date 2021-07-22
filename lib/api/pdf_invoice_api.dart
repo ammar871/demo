@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:demo/api/pdf_api.dart';
 
 import 'package:demo/pojo/data/rsponse_myOrders.dart';
+import 'package:flutter/services.dart';
+
 
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -11,9 +13,10 @@ import 'package:pdf/widgets.dart';
 
 class PdfInvoiceApi {
   static Future<File> generate(DataOrder invoice) async {
-    final pdf = Document();
+    final pdf = Document(deflate: zlib.encode);
 
     pdf.addPage(MultiPage(
+    // theme: ThemeData("pacifo"),
       build: (context) => [
         buildHeader(invoice),
         SizedBox(height: 3 * PdfPageFormat.cm),
@@ -96,7 +99,8 @@ class PdfInvoiceApi {
   static Widget buildSupplierAddress(DataOrder supplier) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(supplier.name, style: TextStyle(fontWeight: FontWeight.bold)),
+          Text(supplier.name,
+           style: TextStyle(fontWeight: FontWeight.bold )),
           SizedBox(height: 1 * PdfPageFormat.mm),
           Text(supplier.address),
         ],

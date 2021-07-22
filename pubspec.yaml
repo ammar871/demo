@@ -117,7 +117,8 @@ flutter:
   fonts:
      - family: pacifo
        fonts:
-        - asset: fonts/fonthome.ttf
+        - asset: fonts/threefont.ttf
+
   #     fonts:
   #       - asset: fonts/Schyler-Regular.ttf
   #       - asset: fonts/Schyler-Italic.ttf
